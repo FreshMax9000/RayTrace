@@ -1,4 +1,4 @@
-"""This moule contains the class Surface
+"""This moule contains the class Surface 
 """
 import numpy as np
 
