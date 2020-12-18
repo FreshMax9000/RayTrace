@@ -28,22 +28,24 @@ def nearest_intersected_object(objects, ray_origin, ray_direction):
             nearest_object = objects[index]
     return nearest_object, min_distance
 
-width = 900
-height = 600
+
+
+width = 300
+height = 200
 
 max_depth = 5
 
-camera = np.array([0, 0, 1])
+camera = np.array([0, 1, 10])
 ratio = float(width) / height
-screen = (-1, 1 / ratio, 1, -1 / ratio) # left, top, right, bottom
+screen = (-1, 1 / ratio+0.1, 1, -1 / ratio+0.1) # left, top, right, bottom
 
 light = { 'position': np.array([5, 5, 5]), 'ambient': np.array([1, 1, 1]), 'diffuse': np.array([1, 1, 1]), 'specular': np.array([1, 1, 1]) }
 
 objects = [
-    { 'center': np.array([-0.2, 0, -1]), 'radius': 0.7, 'ambient': np.array([0.1, 0, 0]), 'diffuse': np.array([0.7, 0, 0]), 'specular': np.array([1, 1, 1]), 'shininess': 100, 'reflection': 0.5 },
-    { 'center': np.array([0.1, -0.3, 0]), 'radius': 0.1, 'ambient': np.array([0.1, 0, 0.1]), 'diffuse': np.array([0.7, 0, 0.7]), 'specular': np.array([1, 1, 1]), 'shininess': 100, 'reflection': 0.5 },
-    { 'center': np.array([-0.3, 0, 0]), 'radius': 0.15, 'ambient': np.array([0, 0.1, 0]), 'diffuse': np.array([0, 0.6, 0]), 'specular': np.array([1, 1, 1]), 'shininess': 100, 'reflection': 0.5 },
-    { 'center': np.array([0, -9000, 0]), 'radius': 9000 - 0.7, 'ambient': np.array([0.1, 0.1, 0.1]), 'diffuse': np.array([0.6, 0.6, 0.6]), 'specular': np.array([1, 1, 1]), 'shininess': 100, 'reflection': 0.5 }
+    { 'center': np.array([-0.2, 0, -1]), 'radius': 0.7, 'ambient': np.array([0.1, 0, 0]), 'diffuse': np.array([0.7, 0, 0]), 'specular': np.array([0.9, 0.9, 0.9]), 'shininess': 20, 'reflection': 0.7 },
+    { 'center': np.array([0.1, -0.3, 0]), 'radius': 0.1, 'ambient': np.array([0.1, 0, 0.1]), 'diffuse': np.array([0.7, 0, 0.7]), 'specular': np.array([0.9, 0.9, 0.9]), 'shininess': 20, 'reflection': 0.7 },
+    { 'center': np.array([-0.3, 0, 0]), 'radius': 0.15, 'ambient': np.array([0, 0.1, 0]), 'diffuse': np.array([0, 0.6, 0]), 'specular': np.array([0.9, 0.9, 0.9]), 'shininess': 20, 'reflection': 0.7 },
+    { 'center': np.array([0, -9000, 0]), 'radius': 9000 - 0.7, 'ambient': np.array([0.1, 0.1, 0.1]), 'diffuse': np.array([0.6, 0.6, 0.6]), 'specular': np.array([0.9, 0.9, 0.9]), 'shininess': 20, 'reflection': 0.7 }
 ]
 
 image = np.zeros((height, width, 3))
@@ -72,21 +74,22 @@ for i, y in enumerate(np.linspace(screen[1], screen[3], height)):
             intersection_to_light_distance = np.linalg.norm(light['position'] - intersection)
             is_shadowed = min_distance < intersection_to_light_distance
 
-            if is_shadowed:
-                break
-
             illumination = np.zeros((3))
 
-            # ambiant
-            illumination += nearest_object['ambient'] * light['ambient']
+            if is_shadowed:
+                # ambiant
+                illumination += nearest_object['ambient'] * light['ambient'] * 0.5       
+            else:
+                # ambiant
+                illumination += nearest_object['ambient'] * light['ambient']
 
-            # diffuse
-            illumination += nearest_object['diffuse'] * light['diffuse'] * np.dot(intersection_to_light, normal_to_surface)
+                # diffuse
+                illumination += nearest_object['diffuse'] * light['diffuse'] * np.dot(intersection_to_light, normal_to_surface)
 
-            # specular
-            intersection_to_camera = normalize(camera - intersection)
-            H = normalize(intersection_to_light + intersection_to_camera)
-            illumination += nearest_object['specular'] * light['specular'] * np.dot(normal_to_surface, H) ** (nearest_object['shininess'] / 4)
+                # specular
+                intersection_to_camera = normalize(camera - intersection)
+                H = normalize(intersection_to_light + intersection_to_camera)
+                illumination += nearest_object['specular'] * light['specular'] * np.dot(normal_to_surface, H) ** (nearest_object['shininess'] / 4)
 
             # reflection
             color += reflection * illumination
