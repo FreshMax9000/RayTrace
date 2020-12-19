@@ -8,60 +8,60 @@ class Surface:
     ambient: np.array, diffuse: np.array, specular: np.array, shinyness: float, reflection: float):
         """Constructor method
         """
-        self._supVec = supVec
-        self._dirVec1 = dirVec1
-        self._dirVec2 = dirVec2
-        self._ambient = ambient
-        self._diffuse = diffuse
-        self._specular = specular
-        self._shinyness = shinyness
-        self._reflection = reflection
+        self.__supVec = supVec
+        self.__dirVec1 = dirVec1
+        self.__dirVec2 = dirVec2
+        self.__ambient = ambient
+        self.__diffuse = diffuse
+        self.__specular = specular
+        self.__shinyness = shinyness
+        self.__reflection = reflection
 
 
     @property
     def supVec(self):
         """Getter for supVec
         """
-        return self._supVec
+        return self.__supVec
         
     @property
     def dirVec1(self):
         """Getter for dirVec1
         """
-        return self._dirVec1
+        return self.__dirVec1
 
     @property
     def dirVec2(self):
         """Getter for dirVec2
         """
-        return self._dirVec2
+        return self.__dirVec2
 
     @property
     def ambient(self):
         """Getter for ambient
         """
-        return self._ambient
+        return self.__ambient
     
     @property
     def diffuse(self):
         """Getter for diffuse
         """
-        return self._diffuse
+        return self.__diffuse
 
     @property
     def specular(self):
         """Getter for specular
         """
-        return self._specular
+        return self.__specular
 
     @property
     def shinyness(self):
         """Getter for shinyness
         """
-        return self._shinyness    
+        return self.__shinyness    
             
     @property
     def reflection(self):
         """Getter for reflection
         """
-        return self._reflection
+        return self.__reflection
