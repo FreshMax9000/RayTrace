@@ -1,32 +1,32 @@
 import numpy as np
 
 class Screen:
-    def __init__(self, bottomLeft: np.array, bottomRight: np.array, topLeft: np.array, topRight: np.array):
-        self._bottomLeft = bottomLeft
-        self._bottomRight = bottomRight
-        self._topLeft = topLeft
-        self._topRight = topRight
+    def __init__(self, bottom: float, top: float, left: float, right: float):
+        self._bottom = bottom
+        self._top = top
+        self._left = left
+        self._right = right
 
     @property
-    def bottomLeft(self):
-        """Getter for bottomLeft
+    def bottom(self):
+        """Getter for bottom
         """
-        return self._bottomLeft
+        return self._bottom
         
     @property
-    def bottomRight(self):
-        """Getter for bottomRight
+    def top(self):
+        """Getter for top
         """
-        return self._bottomRight
+        return self._top
         
     @property
-    def topLeft(self):
-        """Getter for topLeft
+    def left(self):
+        """Getter for left
         """
-        return self._topLeft
+        return self._left
         
     @property
-    def topRight(self):
-        """Getter for topRight
+    def right(self):
+        """Getter for right
         """
-        return self._topRight
+        return self._right
