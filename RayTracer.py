@@ -37,3 +37,7 @@ rightCube = Surface(np.array([0.25, -0.25, 1]), np.array([0, 0, -0.5]), np.array
 topCube = Surface(np.array([0.25, -0.25, 1]), np.array([0, 0, -0.5]), np.array(0.5, 0, 0), np.array([0, 0, 0]), np.array([0, 0, 0]), np.array([0, 0, 0]), 1, 1)
 
 cube = Surfaces([frontCube, leftCube, bottomCube, backCube, rightCube, topCube])
+
+#Lichtquelle initialisieren
+
+image = np.zeros((height, width, 3))
