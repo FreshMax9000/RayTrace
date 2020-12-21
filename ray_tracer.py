@@ -6,6 +6,8 @@ from surface import Surface
 from surfaces import Surfaces
 from ray import Ray
 from light_source import LightSource
+from plane import Plane
+from phong_properties import PhongProperties
 
 
 class RayTracer:
@@ -50,7 +52,15 @@ class RayTracer:
         return allSurfaces
 
     def _initLightSource(self):
-        lightSource = LightSource(self.allSurfaces)
+        supVec = np.array([0.25, 0.749, 1])
+        dirVec1 = np.array([-0.2, 0, 0])
+        dirVec2 = np.array([0, 0, 0.2])
+        plane = Plane(supVec, dirVec1, dirVec2)
+        ambient = np.array([1, 1, 1])
+        diffuse = np.array([1, 1, 1])
+        specular = np.array([1, 1, 1])
+        phongProp = PhongProperties(ambient, diffuse, specular)
+        lightSource = LightSource(self.allSurfaces, plane, phongProp)
         return lightSource
 
     def __init__(self, heightpx, widthpx):

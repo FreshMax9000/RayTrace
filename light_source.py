@@ -2,6 +2,8 @@ import numpy as np
 
 from ray import Ray
 from surfaces import Surfaces
+from plane import Plane
+from phong_properties import PhongProperties
 
 
 def vector3d(x: float, y: float, z: float):
@@ -10,20 +12,14 @@ def vector3d(x: float, y: float, z: float):
 
 class LightSource:
 
-    def __init__(self, surfaces: Surfaces, supVec = vector3d(0.25, 0.75, 1), dirVec1 = vector3d(-0.2, 0, 0),
-        dirVec2 = vector3d(0, 0, 0.2), ambient = vector3d(1, 1, 1), diffuse = vector3d(1, 1, 1),
-        specular = vector3d(1, 1, 1)):
+    def __init__(self, surfaces: Surfaces, plane: Plane, phongProp: PhongProperties):
         self._surfaces = surfaces
-        self._supVec = supVec
-        self._dirVec1 = dirVec1
-        self._dirVec2 = dirVec2
-        self._ambient = ambient
-        self._diffuse = diffuse
-        self._specular = specular
-        self._middle = self._supVec + self._dirVec1 / 2 + self._dirVec2 / 2
+        self._plane = plane
+        self._phong = phongProp
+        self._middle = self._plane.supVec + self._plane.dirVec1 / 2 + self._plane.dirVec2 / 2
 
     def _generate_aim(self, aimX: float, aimY: float):
-        return self._supVec + aimX * self._dirVec1 + aimY * self._dirVec2
+        return self._plane.supVec + aimX * self._plane.dirVec1 + aimY * self._plane.dirVec2
 
     def _generateShadowRay(self, aim, sourcePos):
         return Ray(sourcePos, aim - sourcePos), np.linalg.norm(aim - sourcePos)
@@ -75,15 +71,15 @@ class LightSource:
         return float(blockedRays) / (randomShadowRayCount + systematicShadowRayCountRoot ** 2)
 
     def getAmbient(self):
-        return self._ambient
+        return self._phong.ambient
 
     def getDiffuse(self, surfNormV: np.ndarray, pos: np.ndarray):
         lightDir = Ray.normalizeVector(self._middle - pos)
-        return self._diffuse * np.dot(lightDir, surfNormV)
+        return self._phong.diffuse * np.dot(lightDir, surfNormV)
 
     def getSpecular(self, surfNormV: np.ndarray, pos: np.ndarray, cameraPos: np.ndarray,
         shininess: float):
         lightDir = Ray.normalizeVector(self._middle - pos)
         cameraDir = Ray.normalizeVector(cameraPos - pos)
         optReflAxis = Ray.normalizeVector(lightDir + cameraDir)
-        return self._specular * np.dot(surfNormV, optReflAxis) ** (shininess / 4)
+        return self._phong.specular * np.dot(surfNormV, optReflAxis) ** (shininess / 4)
