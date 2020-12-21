@@ -42,6 +42,24 @@ class LightSource:
 
     def checkIfShadowed(self, position: np.ndarray, randomShadowRayCount = 64,
         systematicShadowRayCountRoot = 8):
+        """Estimates the percentages this point is blocked from a rectangular light source
+
+        This is done by generating random and systematic shadow rays which are cast to points (aim)
+        on the rectangular light source. Depending on how much of these are interrupted by objects
+        on their way, a float value between 0 (not blocked at all) and 1 (fully blocked from the
+        light source) is returned.
+
+        Args:
+            position(numpy 3d vector): The position for which the shadowed percentage shall be
+                determined
+            randomShadowRayCount(int): The count of random shadow rays to be cast
+            systematicShadowRayCountRoot(int): The square root of the count of the sytematic shadow rays
+                to be cast. 
+        
+        Returns: 
+            float: A value between 0 and 1 depending how much the given point is blocked from the light
+            source. 0 = not blocked and 1 = fully blocked
+        """
         shadowRayDistanceList = []
         #Generate random shadow rays
         for i in range(randomShadowRayCount):
