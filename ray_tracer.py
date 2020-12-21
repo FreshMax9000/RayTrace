@@ -46,7 +46,7 @@ class RayTracer:
         allSurfaceList = room.sflist
         allSurfaceList.extend(cuboid.sflist)
         allSurfaceList.extend(cube.sflist)
-        allSurfaces = Surfaces(allSurfaceList)
+        allSurfaces = Surfaces(*allSurfaceList)
         return allSurfaces
 
     def _initLightSource(self):
