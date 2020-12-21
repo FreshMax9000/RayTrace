@@ -76,7 +76,7 @@ class RayTracer:
             #normVek der surface
             surfNorm = collisionSurf.norm
             #shiftedPosVek des auftrittspunkt der surface
-            surfShiftPos = 
+            #surfShiftPos = 
 
     def printImage(self, name: str):
         plt.imsave("%s.png"%name, self._picturecap)
