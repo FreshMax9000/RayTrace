@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2020-12-20T22:33:02.283Z" agent="5.0 (X11)" etag="kqRIAzKSop-jJm74EceE" version="14.1.1" type="github">
+<mxfile host="app.diagrams.net" modified="2020-12-21T12:57:53.207Z" agent="5.0 (X11)" etag="ojj94GUSnaPJ4k_4_ssR" version="14.1.1" type="github">
   <diagram id="C5RBs43oDa-KdzZeNtuy" name="Page-1">
     <mxGraphModel dx="1422" dy="1973" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1500" pageHeight="1169" math="0" shadow="0">
       <root>
@@ -152,7 +152,7 @@
         <mxCell id="xA0XNcAtHobreGwFJSrl-51" value="+ RayTracer(heightpx, widthpx): RayTracer" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="xA0XNcAtHobreGwFJSrl-48" vertex="1">
           <mxGeometry y="60" width="360" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="DLcVSVue9XgoyhIsswaT-2" value="+ traceRays(x, y): colorVector" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="xA0XNcAtHobreGwFJSrl-48" vertex="1">
+        <mxCell id="DLcVSVue9XgoyhIsswaT-2" value="+ traceRays(heightPx, widthPx): colorVector" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="xA0XNcAtHobreGwFJSrl-48" vertex="1">
           <mxGeometry y="90" width="360" height="30" as="geometry" />
         </mxCell>
         <mxCell id="DLcVSVue9XgoyhIsswaT-4" value="+ printImage(name: str)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="xA0XNcAtHobreGwFJSrl-48" vertex="1">
