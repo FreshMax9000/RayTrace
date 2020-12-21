@@ -30,8 +30,8 @@ class Surfaces:
 
         for surface in self.__sflist: #iterieren mit jeder Fläche, sodass jeder mögliche Schnittpunkt gefunden wird
             for i in range(3):        #Aufbauen der Koeffizientenmatrix und der Ergebnismatirx zur Anwendung der .solve Funktion
-                coeffMatrix[i] = [surface.dirVec1[i],surface.dirVec2[i], 0.0 - ray.normDirection[i]]
-                resultMatrix[i] = ray.origin[i] -surface.supVec[i]
+                coeffMatrix[i] = [surface.plane.dirVec1[i],surface.plane.dirVec2[i], 0.0 - ray.normDirection[i]]
+                resultMatrix[i] = ray.origin[i] -surface.plane.supVec[i]
             try:                      #Gleichungssystem wird versucht zu lösem
                 varMatrix = np.linalg.solve(coeffMatrix,resultMatrix)
             except:                   #Wenn nicht lösbar --> kein Schnittpunkt bzw. parrallel, nächste Fläche wird geprüft -->break

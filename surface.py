@@ -3,6 +3,8 @@
 import numpy as np
 
 from ray import Ray
+from plane import Plane
+from phong_properties import PhongProperties
 
 class Surface:
 
@@ -10,66 +12,26 @@ class Surface:
     ambient: np.array, diffuse: np.array, specular: np.array, shinyness: float, reflection: float):
         """Constructor method
         """
-        self.__supVec = supVec
-        self.__dirVec1 = dirVec1
-        self.__dirVec2 = dirVec2
-        self.__ambient = ambient
-        self.__diffuse = diffuse
-        self.__specular = specular
-        self.__shinyness = shinyness
-        self.__reflection = reflection
+        self.plane = Plane(supVec, dirVec1, dirVec2)
+        self.phongProperties = PhongProperties(ambient, diffuse, specular)
 
-
-    @property
-    def supVec(self):
-        """Getter for supVec
-        """
-        return self.__supVec
-        
-    @property
-    def dirVec1(self):
-        """Getter for dirVec1
-        """
-        return self.__dirVec1
-
-    @property
-    def dirVec2(self):
-        """Getter for dirVec2
-        """
-        return self.__dirVec2
-
-    @property
-    def ambient(self):
-        """Getter for ambient
-        """
-        return self.__ambient
-    
-    @property
-    def diffuse(self):
-        """Getter for diffuse
-        """
-        return self.__diffuse
-
-    @property
-    def specular(self):
-        """Getter for specular
-        """
-        return self.__specular
+        self._shinyness = shinyness
+        self._reflection = reflection
 
     @property
     def shinyness(self):
         """Getter for shinyness
         """
-        return self.__shinyness    
+        return self._shinyness    
             
     @property
     def reflection(self):
         """Getter for reflection
         """
-        return self.__reflection
+        return self._reflection
 
     @property
     def norm(self):
         """Normal vector of surface
         """
-        return Ray.normalizeVector(np.cross(self.__dirVec1, self.__dirVec2))
+        return Ray.normalizeVector(np.cross(self.plane.dirVec1, self.plane.dirVec2))
