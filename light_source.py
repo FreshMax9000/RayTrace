@@ -10,8 +10,8 @@ def vector3d(x: float, y: float, z: float):
 
 class LightSource:
 
-    def __init__(self, surfaces: Surfaces, supVec = vector3d(0, 0, 0), dirVec1 = vector3d(1, 0, 0),
-        dirVec2 = vector3d(0, 1, 0), ambient = vector3d(1, 1, 1), diffuse = vector3d(1, 1, 1),
+    def __init__(self, surfaces: Surfaces, supVec = vector3d(0.25, 0.75, 1), dirVec1 = vector3d(-0.2, 0, 0),
+        dirVec2 = vector3d(0, 0, 0.2), ambient = vector3d(1, 1, 1), diffuse = vector3d(1, 1, 1),
         specular = vector3d(1, 1, 1)):
         self._surfaces = surfaces
         self._supVec = supVec
