@@ -60,8 +60,15 @@ class RayTracer:
         self._picturecap = np.zeros((heightpx, widthpx, 3))
         self._max_depth = 5
 
-    def _getPositiveNormVec(self, normVec, curfPos, origin):
-        pass
+    def _getPositiveNormVec(self, normVec, surfPos, origin):
+        NormPointOrigVek= origin - (surfPos + normVec)
+        AntiPointOrigVek= origin - (surfPos - normVec)
+        distNOV = np.sqrt(np.square(NormPointOrigVek[0]) + np.square(NormPointOrigVek[1]) + np.square(NormPointOrigVek[2]))
+        distAOV =np.sqrt(np.square(AntiPointOrigVek[0]) + np.square(AntiPointOrigVek[1]) + np.square(AntiPointOrigVek[2]))
+        if distNOV < distAOV:
+            return normVec
+        elif distNOV > distAOV:
+            return 0 - normVec
 
     def traceRays(self, heightPx, widthPx):
         ray = self.camera.calculateRay(widthPx, heightPx)
@@ -75,8 +82,25 @@ class RayTracer:
             surfPos = ray.origin + minDistance * ray.normDirection
             #normVek der surface
             surfNorm = collisionSurf.norm
+            surfNorm = self._getPositiveNormVec(surfNorm, surfPos, ray.origin)
             #shiftedPosVek des auftrittspunkt der surface
-            #surfShiftPos = 
+            surfShiftPos = surfPos + 1e-6 * surfNorm
+            #define illumination var
+            illumination = np.zeros((3))
+            #calculate shaded part
+            shadedPart = float(self.lightSource.checkIfShadowed(surfPos, randomShadowRayCount=0, systematicShadowRayCountRoot=2))
+            if shadedPart != 1:
+                illumination += self.lightSource.getAmbient()
+                illumination += self.lightSource.getDiffuse(surfNorm, surfPos)
+                illumination += self.lightSource.getSpecular(surfNorm, surfPos, self.camera.cameraCords,
+                    collisionSurf.shinyness)
+                color += reflection * illumination
+            reflection *= collisionSurf.reflection
+            ray.reflect(surfNorm, surfShiftPos)
+        self._picturecap[heightPx, widthPx] = np.clip(color, 0, 1)
+
+
+
 
     def printImage(self, name: str):
         plt.imsave("%s.png"%name, self._picturecap)

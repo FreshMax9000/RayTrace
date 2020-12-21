@@ -30,3 +30,7 @@ class Ray:
         """Returns a normalized vector
         """
         return vector / np.linalg.norm(vector)
+
+    def reflect(self, surfNorm, surfShiftPos):
+        self.origin = surfShiftPos
+        self.normDirection = self.normDirection - 2 * np.dot(self.normDirection, surfNorm) * surfNorm

@@ -70,7 +70,7 @@ class LightSource:
         #check how many shadow rays hit an object
         blockedRays = 0
         for rayDistance in shadowRayDistanceList:
-            if self._surfaces.checkIfCollisionObj(rayDistance[0])[1] < rayDistance[1]:
+            if self._surfaces.getCollisionObject(rayDistance[0])[1] < rayDistance[1]:
                 blockedRays += 1
         return float(blockedRays) / (randomShadowRayCount + systematicShadowRayCountRoot ** 2)
 

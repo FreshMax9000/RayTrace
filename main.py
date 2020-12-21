@@ -12,6 +12,7 @@ if __name__ == "__main__":
     for height_px in range(height):
         for width_px in range(width):
             rayTracer.traceRays(height_px, width_px)
+        print("%d / %d"%(height_px, height))
     
     rayTracer.printImage("images/test_image")
     print("---Finished---")
