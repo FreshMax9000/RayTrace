@@ -58,10 +58,25 @@ class RayTracer:
         self.allSurfaces = self._initAllSurfaces()
         self.lightSource = self._initLightSource()
         self._picturecap = np.zeros((heightpx, widthpx, 3))
+        self._max_depth = 5
+
+    def _getPositiveNormVec(self, normVec, curfPos, origin):
+        pass
 
     def traceRays(self, heightPx, widthPx):
-        #TODO
-        pass
+        ray = self.camera.calculateRay(widthPx, heightPx)
+        color = np.zeros((3))
+        reflection = 1
+        for i in range(self._max_depth):
+            collisionSurf, minDistance = self.allSurfaces.getCollisionObject(ray)
+            if collisionSurf is None:
+                break
+            #pos auf der surface
+            surfPos = ray.origin + minDistance * ray.normDirection
+            #normVek der surface
+            surfNorm = collisionSurf.norm
+            #shiftedPosVek des auftrittspunkt der surface
+            surfShiftPos = 
 
     def printImage(self, name: str):
         plt.imsave("%s.png"%name, self._picturecap)

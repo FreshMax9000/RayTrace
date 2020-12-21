@@ -13,6 +13,6 @@ if __name__ == "__main__":
         for width_px in range(width):
             rayTracer.traceRays(height_px, width_px)
     
-    rayTracer.printImage("test_image")
+    rayTracer.printImage("images/test_image")
     print("---Finished---")
     print("The render took %fs\n"%(time.time() - startTime))

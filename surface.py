@@ -2,6 +2,8 @@
 """
 import numpy as np
 
+from ray import Ray
+
 class Surface:
 
     def __init__(self, supVec: np.array, dirVec1: np.array, dirVec2: np.array, 
@@ -65,3 +67,9 @@ class Surface:
         """Getter for reflection
         """
         return self.__reflection
+
+    @property
+    def norm(self):
+        """Normal vector of surface
+        """
+        return Ray.normalizeVector(np.cross(self.__dirVec1, self.__dirVec2))

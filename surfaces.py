@@ -46,7 +46,7 @@ class Surfaces:
         if smallestDistance != 100.0:
             return (associatedSurface, smallestDistance)
         else:
-            return -1
+            return (None, 0)
         
 
         
