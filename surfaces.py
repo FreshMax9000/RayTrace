@@ -26,7 +26,7 @@ class Surfaces:
         #Alle mit float, da sobald ein Wert in array --> alle float, generell keine häufigen Speicherzuweisungen durch diesen Stil
         coeffMatrix = np.array([[0.0,0.0,0.0],[0.0,0.0,0.0],[0.0,0.0,0.0]]) 
         resultMatrix = np.array([0.0,0.0,0.0])
-        smallestMatrix = np.array([0.0,0.0,50000.0])
+        smallestDistance = 100.0
 
         for surface in self.__sflist: #iterieren mit jeder Fläche, sodass jeder mögliche Schnittpunkt gefunden wird
             for i in range(3):        #Aufbauen der Koeffizientenmatrix und der Ergebnismatirx zur Anwendung der .solve Funktion
@@ -35,17 +35,16 @@ class Surfaces:
             try:                      #Gleichungssystem wird versucht zu lösem
                 varMatrix = np.linalg.solve(coeffMatrix,resultMatrix)
             except:                   #Wenn nicht lösbar --> kein Schnittpunkt bzw. parrallel, nächste Fläche wird geprüft -->break
-                break
-                                      
+                continue
+            
             if varMatrix[0] > 1 or varMatrix[0] < 0 or varMatrix[1] > 1 or varMatrix[1] < 0 or varMatrix[2] <= 0:
-                break
-            if varMatrix[2] < smallestMatrix[2]:
-                smallestMatrix = varMatrix
+                continue
+
+            if varMatrix[2] < smallestDistance:
+                smallestDistance = varMatrix[2]
                 associatedSurface = surface
-        if smallestMatrix[2] != 50000.0:
-            for i in range(0,2):
-                resultMatrix[i] = associatedSurface.supVec[i]+associatedSurface.dirVec1[i]+associatedSurface.dirVec2[i]
-                return resultMatrix
+        if smallestDistance != 100.0:
+            return (associatedSurface, smallestDistance)
         else:
             return -1
         
