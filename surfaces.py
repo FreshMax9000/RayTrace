@@ -7,18 +7,13 @@ class Surfaces:
     def __init__(self, *surfacetupel):
         """Constructor method
         """
-        self.__sflist = list(surfacetupel)
-        
-
-    
+        self.__sflist = list(surfacetupel)        
     
     @property
     def sflist(self):
         #Getter for supVec
         
         return self.__sflist
-
-
 
     def getCollisionObject(self, ray):
         #Initialiesieren der Matrixen für die  linalg.solve Funktion

@@ -8,12 +8,11 @@ from phong_properties import PhongProperties
 
 class Surface:
 
-    def __init__(self, supVec: np.array, dirVec1: np.array, dirVec2: np.array, 
-    ambient: np.array, diffuse: np.array, specular: np.array, shinyness: float, reflection: float):
+    def __init__(self, plane: Plane, phongProp: PhongProperties, shinyness: float, reflection: float):
         """Constructor method
         """
-        self.plane = Plane(supVec, dirVec1, dirVec2)
-        self.phongProperties = PhongProperties(ambient, diffuse, specular)
+        self.plane = plane
+        self.phongProperties = phongProp
 
         self._shinyness = shinyness
         self._reflection = reflection

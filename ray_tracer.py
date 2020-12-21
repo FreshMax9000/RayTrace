@@ -13,31 +13,86 @@ from phong_properties import PhongProperties
 class RayTracer:
 
     def _init_room(self):
-        leftWall = Surface(np.array([1.25, -0.75, 0]), np.array([0, 1.5, 0]), np.array([0, 0, 2.5]), np.array([1, 0, 0]), np.array([0, 0, 0]), np.array([0, 0, 0]), 1, 1)
-        rightWall = Surface(np.array([-1.25, -0.75, 0]), np.array([0, 1.5, 0]), np.array([0, 0, 2.5]), np.array([0.4, 0.8, 1]), np.array([0, 0, 0]), np.array([0, 0, 0]), 1, 1)
-        bottomWall = Surface(np.array([1.25, -0.75, 0]), np.array([0, 0, 2.5]), np.array([-2.5, 0, 0]), np.array([1, 1, 1]), np.array([0, 0, 0]), np.array([0, 0, 0]), 1, 1)
-        topWall = Surface(np.array([1.25, 0.75, 0]), np.array([-2.5, 0, 0]), np.array([0, 0, 2.5]), np.array([1, 1, 1]), np.array([0, 0, 0]), np.array([0, 0, 0]), 1, 1)
-        backWall = Surface(np.array([1.25, -0.75, 2.5]), np.array([-2.5, 0, 0]), np.array([0, 1.5, 0]), np.array([1, 1, 1]), np.array([0, 0, 0]), np.array([0, 0, 0]), 1, 1)
+        leftWallPlane = Plane(np.array([1.25, -0.75, 0]), np.array([0, 1.5, 0]), np.array([0, 0, 2.5]))
+        rightWallPlane = Plane(np.array([-1.25, -0.75, 0]), np.array([0, 1.5, 0]), np.array([0, 0, 2.5]))
+        bottomWallPlane = Plane(np.array([1.25, -0.75, 0]), np.array([0, 0, 2.5]), np.array([-2.5, 0, 0]))
+        topWallPlane = Plane(np.array([1.25, 0.75, 0]), np.array([-2.5, 0, 0]), np.array([0, 0, 2.5]))
+        backWallPlane = Plane(np.array([1.25, -0.75, 2.5]), np.array([-2.5, 0, 0]), np.array([0, 1.5, 0]))
+        
+        ambientMult = 0.1
+        diffuseMult = 0.7
+        specularMult = 1.0
+        redColor = np.array([1, 0, 0])
+        blueColor = np.array([0, 0, 1])
+        whiteColor = np.array([1, 1, 1])
+        redPhong = PhongProperties(redColor, ambientMult, diffuseMult, specularMult)
+        bluePhong = PhongProperties(blueColor, ambientMult, diffuseMult, specularMult)
+        whitePhong = PhongProperties(whiteColor, ambientMult, diffuseMult, specularMult)
+
+        shinyness = 16
+        reflection = 0.6
+
+        #left wall red, right wall blue, rest white
+        leftWall = Surface(leftWallPlane, redPhong, shinyness, reflection)
+        rightWall = Surface(rightWallPlane, bluePhong, shinyness, reflection)
+        bottomWall = Surface(bottomWallPlane, whitePhong, shinyness, reflection)
+        topWall = Surface(topWallPlane, whitePhong, shinyness, reflection)
+        backWall = Surface(backWallPlane, whitePhong, shinyness, reflection)
+
         room = Surfaces(leftWall, rightWall, bottomWall, topWall, backWall)
         return room
 
     def _init_cuboid(self):
-        frontRighttCuboid = Surface(np.array([-0.6, -0.75, 0.5]), np.array([0, 1, 0]), np.array([-0.25, 0, 0.25]), np.array([1, 1, 1]), np.array([0, 0, 0]), np.array([0, 0, 0]), 1, 1)
-        frontLeftCuboid = Surface(np.array([-0.6, -0.75, 0.5]), np.array([0, 1, 0]), np.array([0.25, 0, 0.25]), np.array([1, 1, 1]), np.array([0, 0, 0]), np.array([0, 0, 0]), 1, 1)
-        backLeftCuboid = Surface(np.array([-0.6, -0.75, 1]), np.array([0, 1, 0]), np.array([0.25, 0, -0.25]), np.array([1, 1, 1]), np.array([0, 0, 0]), np.array([0, 0, 0]), 1, 1)
-        backRightCuboid = Surface(np.array([-0.6, -0.75, 1]), np.array([0, 1, 0]), np.array([-0.25, 0, -0.25]), np.array([1, 1, 1]), np.array([0, 0, 0]), np.array([0, 0, 0]), 1, 1)
-        bottomCuboid = Surface(np.array([-0.6, -0.75, 0.5]), np.array([-0.25, 0, 0.25]), np.array([0.25, 0, 0.25]), np.array([1, 1, 1]), np.array([0, 0, 0]), np.array([0, 0, 0]), 1, 1)
-        topCuboid = Surface(np.array([-0.6, 0.25, 0.5]), np.array([-0.25, 0, 0.25]), np.array([0.25, 0, 0.25]), np.array([1, 1, 1]), np.array([0, 0, 0]), np.array([0, 0, 0]), 1, 1)
-        cuboid = Surfaces(frontRighttCuboid, frontLeftCuboid, backLeftCuboid, backRightCuboid, bottomCuboid, topCuboid)
+        frontRightCuboidPlane = Plane(np.array([-0.6, -0.75, 0.5]), np.array([0, 1, 0]), np.array([-0.25, 0, 0.25]))
+        frontLeftCuboidPlane = Plane(np.array([-0.6, -0.75, 0.5]), np.array([0, 1, 0]), np.array([0.25, 0, 0.25]))
+        backLeftCuboidPlane = Plane(np.array([-0.6, -0.75, 1]), np.array([0, 1, 0]), np.array([0.25, 0, -0.25]))
+        backRightCuboidPlane = Plane(np.array([-0.6, -0.75, 1]), np.array([0, 1, 0]), np.array([-0.25, 0, -0.25]))
+        bottomCuboidPlane = Plane(np.array([-0.6, -0.75, 0.5]), np.array([-0.25, 0, 0.25]), np.array([0.25, 0, 0.25]))
+        topCuboidPlane = Plane(np.array([-0.6, 0.25, 0.5]), np.array([-0.25, 0, 0.25]), np.array([0.25, 0, 0.25]))
+
+        ambientMult = 0.1
+        diffuseMult = 0.7
+        specularMult = 1.0
+        whiteColor = np.array([1, 1, 1])
+        whitePhong = PhongProperties(whiteColor, ambientMult, diffuseMult, specularMult)
+
+        shinyness = 16
+        reflection = 0.6
+
+        frontRightCuboid = Surface(frontRightCuboidPlane, whitePhong, shinyness, reflection)
+        frontLeftCuboid = Surface(frontLeftCuboidPlane, whitePhong, shinyness, reflection)
+        backLeftCuboid = Surface(backLeftCuboidPlane, whitePhong, shinyness, reflection)
+        backRightCuboid = Surface(backRightCuboidPlane, whitePhong, shinyness, reflection)
+        bottomCuboid = Surface(bottomCuboidPlane, whitePhong, shinyness, reflection)
+        topCuboid = Surface(topCuboidPlane, whitePhong, shinyness, reflection)
+
+        cuboid = Surfaces(frontRightCuboid, frontLeftCuboid, backLeftCuboid, backRightCuboid, bottomCuboid, topCuboid)
         return cuboid
 
     def _init_cube(self):
-        frontCube = Surface(np.array([0.75, -0.75, 0.5]), np.array([0, 0.5, 0]), np.array([-0.5, 0, 0]), np.array([1, 1, 1]), np.array([0, 0, 0]), np.array([0, 0, 0]), 1, 1)
-        leftCube = Surface(np.array([0.75, -0.75, 0.5]), np.array([0, 0.5, 0]), np.array([0, 0, 0.5]), np.array([1, 1, 1]), np.array([0, 0, 0]), np.array([0, 0, 0]), 1, 1)
-        bottomCube = Surface(np.array([0.75, -0.75, 0.5]), np.array([-0.5, 0, 0]), np.array([0, 0, 0.5]), np.array([1, 1, 1]), np.array([0, 0, 0]), np.array([0, 0, 0]), 1, 1)
-        backCube = Surface(np.array([0.25, -0.25, 1]), np.array([0.5, 0, 0]), np.array([0, -0.5, 0]), np.array([1, 1, 1]), np.array([0, 0, 0]), np.array([0, 0, 0]), 1, 1)
-        rightCube = Surface(np.array([0.25, -0.25, 1]), np.array([0, 0, -0.5]), np.array([0, -0.5, 0]), np.array([1, 1, 1]), np.array([0, 0, 0]), np.array([0, 0, 0]), 1, 1)
-        topCube = Surface(np.array([0.25, -0.25, 1]), np.array([0, 0, -0.5]), np.array([0.5, 0, 0]), np.array([1, 1, 1]), np.array([0, 0, 0]), np.array([0, 0, 0]), 1, 1)
+        frontCubePlane = Plane(np.array([0.75, -0.75, 0.5]), np.array([0, 0.5, 0]), np.array([-0.5, 0, 0]))
+        leftCubePlane = Plane(np.array([0.75, -0.75, 0.5]), np.array([0, 0.5, 0]), np.array([0, 0, 0.5]))
+        bottomCubePlane = Plane(np.array([0.75, -0.75, 0.5]), np.array([-0.5, 0, 0]), np.array([0, 0, 0.5]))
+        backCubePlane = Plane(np.array([0.25, -0.25, 1]), np.array([0.5, 0, 0]), np.array([0, -0.5, 0]))
+        rightCubePlane = Plane(np.array([0.25, -0.25, 1]), np.array([0, 0, -0.5]), np.array([0, -0.5, 0]))
+        topCubePlane = Plane(np.array([0.25, -0.25, 1]), np.array([0, 0, -0.5]), np.array([0.5, 0, 0]))
+
+        ambientMult = 0.1
+        diffuseMult = 0.7
+        specularMult = 1.0
+        yellowColor = np.array([1, 1, 0])
+        yellowPhong = PhongProperties(yellowColor, ambientMult, diffuseMult, specularMult)
+
+        shinyness = 16
+        reflection = 0.6
+
+        frontCube = Surface(frontCubePlane, yellowPhong, shinyness, reflection)
+        leftCube = Surface(leftCubePlane, yellowPhong, shinyness, reflection)
+        bottomCube = Surface(bottomCubePlane, yellowPhong, shinyness, reflection)
+        backCube = Surface(backCubePlane, yellowPhong, shinyness, reflection)
+        rightCube = Surface(rightCubePlane, yellowPhong, shinyness, reflection)
+        topCube = Surface(topCubePlane, yellowPhong, shinyness, reflection)
+
         cube = Surfaces(frontCube, leftCube, bottomCube, backCube, rightCube, topCube)
         return cube
 
@@ -56,10 +111,7 @@ class RayTracer:
         dirVec1 = np.array([-0.2, 0, 0])
         dirVec2 = np.array([0, 0, 0.2])
         plane = Plane(supVec, dirVec1, dirVec2)
-        ambient = np.array([1, 1, 1])
-        diffuse = np.array([1, 1, 1])
-        specular = np.array([1, 1, 1])
-        phongProp = PhongProperties(ambient, diffuse, specular)
+        phongProp = PhongProperties(np.array([1, 1, 1]), 1, 1, 1)
         lightSource = LightSource(self.allSurfaces, plane, phongProp)
         return lightSource
 
