@@ -22,24 +22,39 @@ class LightSource:
         self._specular = specular
         self._middle = self._supVec + self._dirVec1 / 2 + self._dirVec2 / 2
 
-    def _generateRandomShadowRay(self, sourcePos: np.ndarray):
-        aim = self._supVec + np.random.rand() * self._dirVec1 + np.random.rand() * self._dirVec2
+    def _generate_aim(self, aimX: float, aimY: float):
+        return self._supVec + aimX * self._dirVec1 + aimY * self._dirVec2
+
+    def _generateShadowRay(self, aim, sourcePos):
         return Ray(sourcePos, aim - sourcePos), np.linalg.norm(aim - sourcePos)
 
-    def checkIfShadowed(self, position: np.ndarray, randomShadowRayCount = 64):
-        shadowRayList = []
+    def _generateRandomShadowRay(self, sourcePos: np.ndarray):
+        aim = self._generate_aim(np.random.rand(), np.random.rand())
+        return self._generateShadowRay(aim, sourcePos)
+
+    def _generateSystematicShadowRayList(self, sourcePos, systematicShadowRayCountRoot):
+        x = np.linspace(0, 1, systematicShadowRayCountRoot)
+        aimCords = list(np.array(np.meshgrid(x, x)).T.reshape(-1, 2)) #list might be slow
+        rayDistanceList = []
+        for aimCord in aimCords:
+            rayDistanceList.append(self._generateShadowRay(self._generate_aim(aimCord[0], aimCord[1]), sourcePos))
+        return rayDistanceList
+
+    def checkIfShadowed(self, position: np.ndarray, randomShadowRayCount = 64,
+        systematicShadowRayCountRoot = 8):
         shadowRayDistanceList = []
-        #Generate shadow rays
+        #Generate random shadow rays
         for i in range(randomShadowRayCount):
-            ray, distance = self._generateRandomShadowRay(position)
-            shadowRayList.append(ray)
-            shadowRayDistanceList.append(distance)
+            shadowRayDistanceList.append(self._generateRandomShadowRay(position))
+        #Generate systematic shadow rays
+        shadowRayDistanceList.extend(self._generateSystematicShadowRayList(position,
+            systematicShadowRayCountRoot))
         #check how many shadow rays hit an object
         blockedRays = 0
-        for i, shadowRay in enumerate(shadowRayList):
-            if self._surfaces.checkIfCollisionObj(shadowRay)[1] < shadowRayDistanceList[i]:
+        for rayDistance in shadowRayDistanceList:
+            if self._surfaces.checkIfCollisionObj(rayDistance[0])[1] < rayDistance[1]:
                 blockedRays += 1
-        return float(blockedRays) / randomShadowRayCount
+        return float(blockedRays) / (randomShadowRayCount + systematicShadowRayCountRoot ** 2)
 
     def getAmbient(self):
         return self._ambient
@@ -48,7 +63,8 @@ class LightSource:
         lightDir = Ray.normalizeVector(self._middle - pos)
         return self._diffuse * np.dot(lightDir, surfNormV)
 
-    def getSpecular(self, surfNormV: np.ndarray, pos: np.ndarray, cameraPos: np.ndarray, shininess: float):
+    def getSpecular(self, surfNormV: np.ndarray, pos: np.ndarray, cameraPos: np.ndarray,
+        shininess: float):
         lightDir = Ray.normalizeVector(self._middle - pos)
         cameraDir = Ray.normalizeVector(cameraPos - pos)
         optReflAxis = Ray.normalizeVector(lightDir + cameraDir)
