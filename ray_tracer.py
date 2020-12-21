@@ -40,10 +40,13 @@ class RayTracer:
         return cube
 
     def _initAllSurfaces(self):
-        room = self._init_room().sflist
-        cuboid = self._init_cuboid().sflist
-        cube = self._init_cube().sflist
-        allSurfaces = Surfaces(*room.sflist, *cuboid.sflist, *cube.sflist)
+        room = self._init_room()
+        cuboid = self._init_cuboid()
+        cube = self._init_cube()
+        allSurfaceList = room.sflist
+        allSurfaceList.extend(cuboid.sflist)
+        allSurfaceList.extend(cube.sflist)
+        allSurfaces = Surfaces(allSurfaceList)
         return allSurfaces
 
     def _initLightSource(self):
@@ -56,7 +59,7 @@ class RayTracer:
         self.lightSource = self._initLightSource()
         self._picturecap = np.zeros((heightpx, widthpx, 3))
 
-    def traceRays(self, x, y):
+    def traceRays(self, heightPx, widthPx):
         #TODO
         pass
 
