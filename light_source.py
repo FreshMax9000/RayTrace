@@ -36,6 +36,8 @@ class LightSource:
             rayDistanceList.append(self._generateShadowRay(self._generate_aim(aimCord[0], aimCord[1]), sourcePos))
         return rayDistanceList
 
+    #def _
+
     def checkIfShadowed(self, position: np.ndarray, randomShadowRayCount = 64,
         systematicShadowRayCountRoot = 8):
         """Estimates the percentages this point is blocked from a rectangular light source
@@ -74,7 +76,7 @@ class LightSource:
         return self._phong.ambient
 
     def getDiffuse(self, surfNormV: np.ndarray, pos: np.ndarray):
-        lightDir = Ray.normalizeVector(self._middle - pos)
+        lightDir = self._middle - pos
         return self._phong.diffuse * np.dot(lightDir, surfNormV)
 
     def getSpecular(self, surfNormV: np.ndarray, pos: np.ndarray, cameraPos: np.ndarray,
@@ -82,4 +84,4 @@ class LightSource:
         lightDir = Ray.normalizeVector(self._middle - pos)
         cameraDir = Ray.normalizeVector(cameraPos - pos)
         optReflAxis = Ray.normalizeVector(lightDir + cameraDir)
-        return self._phong.specular * np.dot(surfNormV, optReflAxis) ** (shinyness / 4)
+        return self._phong.specular * np.dot(surfNormV, optReflAxis) ** shinyness

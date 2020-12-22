@@ -7,7 +7,7 @@ if __name__ == "__main__":
 
     height = 300
     width = 400
-    rayTracer = RayTracer(height, width, max_depth=3, randomShadowRays=0, systematicShadowRayRoot=3)
+    rayTracer = RayTracer(height, width, max_depth=3, randomShadowRays=4, systematicShadowRayRoot=5)
 
     for height_px in range(height):
         for width_px in range(width):

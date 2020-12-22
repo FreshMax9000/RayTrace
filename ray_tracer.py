@@ -13,14 +13,22 @@ from phong_properties import PhongProperties
 class RayTracer:
 
     def _init_room(self):
-        leftWallPlane = Plane(np.array([1.25, -0.75, 0]), np.array([0, 1.5, 0]), np.array([0, 0, -2.5]))
-        rightWallPlane = Plane(np.array([-1.25, -0.75, 0]), np.array([0, 1.5, 0]), np.array([0, 0, -2.5]))
+        """
+        rightWallPlane = Plane(np.array([1.25, -0.75, 0]), np.array([0, 1.5, 0]), np.array([0, 0, -2.5]))
+        leftWallPlane = Plane(np.array([-1.25, -0.75, 0]), np.array([0, 1.5, 0]), np.array([0, 0, -2.5]))
         bottomWallPlane = Plane(np.array([1.25, -0.75, 0]), np.array([0, 0, -2.5]), np.array([-2.5, 0, 0]))
         topWallPlane = Plane(np.array([1.25, 0.75, 0]), np.array([-2.5, 0, 0]), np.array([0, 0, -2.5]))
         backWallPlane = Plane(np.array([1.25, -0.75, -2.5]), np.array([-2.5, 0, 0]), np.array([0, 1.5, 0]))
+        """
+        rightWallPlane = Plane(np.array([1.25, -0.75, 1.5]), np.array([0, 1.5, 0]), np.array([0, 0, -14]))
+        leftWallPlane = Plane(np.array([-1.25, -0.75, 1.5]), np.array([0, 1.5, 0]), np.array([0, 0, -14]))
+        bottomWallPlane = Plane(np.array([1.25, -0.75, 1.5]), np.array([0, 0, -14]), np.array([-2.5, 0, 0]))
+        topWallPlane = Plane(np.array([1.25, 0.75, 1.5]), np.array([-2.5, 0, 0]), np.array([0, 0, -14]))
+        backWallPlane = Plane(np.array([1.25, -0.75, -2.5]), np.array([-2.5, 0, 0]), np.array([0, 1.5, 0]))
+        frontWallPlane = Plane(np.array([1.25, -0.75, 11.5]), np.array([-2.5, 0, 0]), np.array([0, 1.5, 0]))
         
         ambientMult = 0.1
-        diffuseMult = 0.7
+        diffuseMult = 0.2
         specularMult = 1.0
         redColor = np.array([1, 0, 0])
         blueColor = np.array([0, 0, 1])
@@ -29,8 +37,8 @@ class RayTracer:
         bluePhong = PhongProperties(blueColor, ambientMult, diffuseMult, specularMult)
         whitePhong = PhongProperties(whiteColor, ambientMult, diffuseMult, specularMult)
 
-        shinyness = 16
-        reflection = 0.2
+        shinyness = 3.0
+        reflection = 0.0
 
         #left wall red, right wall blue, rest white
         rightWall = Surface(leftWallPlane, bluePhong, shinyness, reflection)
@@ -38,8 +46,9 @@ class RayTracer:
         bottomWall = Surface(bottomWallPlane, whitePhong, shinyness, reflection)
         topWall = Surface(topWallPlane, whitePhong, shinyness, reflection)
         backWall = Surface(backWallPlane, whitePhong, shinyness, reflection)
+        frontWall = Surface(frontWallPlane, whitePhong, shinyness, 0.0)
 
-        room = Surfaces(leftWall, rightWall, bottomWall, topWall, backWall)
+        room = Surfaces(leftWall, rightWall, bottomWall, topWall, backWall, frontWall)
         return room
 
     def _init_cuboid(self):
@@ -50,14 +59,14 @@ class RayTracer:
         #bottomCuboidPlane = Plane(np.array([0.6, -0.75, -0.5]), np.array([0.25, 0, 0.25]), np.array([0.25, 0, -0.25]))
         topCuboidPlane = Plane(np.array([0.6, -0.25, -1]), np.array([-0.25, 0, -0.25]), np.array([0.25, 0, -0.25]))
 
-        ambientMult = 0.1
-        diffuseMult = 0.7
+        ambientMult = 0.15
+        diffuseMult = 0.2
         specularMult = 1.0
         whiteColor = np.array([1, 1, 1])
         whitePhong = PhongProperties(whiteColor, ambientMult, diffuseMult, specularMult)
 
-        shinyness = 16
-        reflection = 0.6
+        shinyness = 2.0
+        reflection = 0.2
 
         frontRightCuboid = Surface(frontRightCuboidPlane, whitePhong, shinyness, reflection)
         frontLeftCuboid = Surface(frontLeftCuboidPlane, whitePhong, shinyness, reflection)
@@ -77,14 +86,14 @@ class RayTracer:
         rightCubePlane = Plane(np.array([-0.25, 0.25, -1.5]), np.array([0, 0, 0.5]), np.array([0, 0.5, 0]))
         topCubePlane = Plane(np.array([-0.25, 0.25, -1.5]), np.array([0, 0, 0.5]), np.array([-0.5, 0, 0]))
 
-        ambientMult = 0.1
-        diffuseMult = 0.7
+        ambientMult = 0.15
+        diffuseMult = 0.2
         specularMult = 1.0
         yellowColor = np.array([1, 1, 0])
         yellowPhong = PhongProperties(yellowColor, ambientMult, diffuseMult, specularMult)
 
-        shinyness = 16
-        reflection = 0.6
+        shinyness = 2.0
+        reflection = 0.2
 
         frontCube = Surface(frontCubePlane, yellowPhong, shinyness, reflection)
         leftCube = Surface(leftCubePlane, yellowPhong, shinyness, reflection)
@@ -107,7 +116,7 @@ class RayTracer:
         return allSurfaces
 
     def _initLightSource(self):
-        supVec = np.array([0.25, -0.749, -1])
+        supVec = np.array([0.25, -0.749, -1.75])
         dirVec1 = np.array([-0.2, 0, 0])
         dirVec2 = np.array([0, 0, -0.2])
         plane = Plane(supVec, dirVec1, dirVec2)
@@ -156,8 +165,8 @@ class RayTracer:
             illumination = np.zeros((3))
             #calculate shaded part
             shadedPart = float(self.lightSource.checkIfShadowed(surfShiftPos, randomShadowRayCount=self._rSR, systematicShadowRayCountRoot=self._sSRR))
-            if shadedPart != 1:
-                illumination += collisionSurf.phong.ambient * self.lightSource.getAmbient()
+            illumination += collisionSurf.phong.ambient * self.lightSource.getAmbient()
+            if shadedPart != 1:                
                 illumination += collisionSurf.phong.diffuse * self.lightSource.getDiffuse(surfNorm, surfPos)
                 illumination += collisionSurf.phong.specular * self.lightSource.getSpecular(surfNorm, surfPos,
                     self.camera.cameraCords, collisionSurf.shinyness)
