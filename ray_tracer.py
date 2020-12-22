@@ -43,12 +43,12 @@ class RayTracer:
         return room
 
     def _init_cuboid(self):
-        frontRightCuboidPlane = Plane(np.array([-0.6, -0.75, -0.5]), np.array([0, 1, 0]), np.array([-0.25, 0, -0.25]))
-        frontLeftCuboidPlane = Plane(np.array([-0.6, -0.75, -0.5]), np.array([0, 1, 0]), np.array([0.25, 0, -0.25]))
-        backLeftCuboidPlane = Plane(np.array([-0.6, -0.75, -1]), np.array([0, 1, 0]), np.array([0.25, 0, 0.25]))
-        backRightCuboidPlane = Plane(np.array([-0.6, -0.75, -1]), np.array([0, 1, 0]), np.array([-0.25, 0, 0.25]))
-        bottomCuboidPlane = Plane(np.array([-0.6, -0.75, -0.5]), np.array([-0.25, 0, -0.25]), np.array([0.25, 0, -0.25]))
-        topCuboidPlane = Plane(np.array([-0.6, 0.25, -0.5]), np.array([-0.25, 0, -0.25]), np.array([0.25, 0, -0.25]))
+        frontRightCuboidPlane = Plane(np.array([0.6, -0.75, -1]), np.array([0, 1, 0]), np.array([0.25, 0, -0.25]))
+        frontLeftCuboidPlane = Plane(np.array([0.6, -0.75, -1]), np.array([0, 1, 0]), np.array([-0.25, 0, -0.25]))
+        backLeftCuboidPlane = Plane(np.array([0.6, -0.75, -1.5]), np.array([0, 1, 0]), np.array([-0.25, 0, 0.25]))
+        backRightCuboidPlane = Plane(np.array([0.6, -0.75, -1.5]), np.array([0, 1, 0]), np.array([0.25, 0, 0.25]))
+        #bottomCuboidPlane = Plane(np.array([0.6, -0.75, -0.5]), np.array([0.25, 0, 0.25]), np.array([0.25, 0, -0.25]))
+        topCuboidPlane = Plane(np.array([0.6, 0.25, -1]), np.array([-0.25, 0, -0.25]), np.array([0.25, 0, -0.25]))
 
         ambientMult = 0.1
         diffuseMult = 0.7
@@ -63,10 +63,10 @@ class RayTracer:
         frontLeftCuboid = Surface(frontLeftCuboidPlane, whitePhong, shinyness, reflection)
         backLeftCuboid = Surface(backLeftCuboidPlane, whitePhong, shinyness, reflection)
         backRightCuboid = Surface(backRightCuboidPlane, whitePhong, shinyness, reflection)
-        bottomCuboid = Surface(bottomCuboidPlane, whitePhong, shinyness, reflection)
+        #bottomCuboid = Surface(bottomCuboidPlane, whitePhong, shinyness, reflection)
         topCuboid = Surface(topCuboidPlane, whitePhong, shinyness, reflection)
 
-        cuboid = Surfaces(frontRightCuboid, frontLeftCuboid, backLeftCuboid, backRightCuboid, bottomCuboid, topCuboid)
+        cuboid = Surfaces(frontRightCuboid, frontLeftCuboid, backLeftCuboid, backRightCuboid, topCuboid)
         return cuboid
 
     def _init_cube(self):
@@ -101,7 +101,7 @@ class RayTracer:
         cuboid = self._init_cuboid()
         cube = self._init_cube()
         allSurfaceList = room.sflist
-        #allSurfaceList.extend(cuboid.sflist)
+        allSurfaceList.extend(cuboid.sflist)
         #allSurfaceList.extend(cube.sflist)
         allSurfaces = Surfaces(*allSurfaceList)
         return allSurfaces
