@@ -43,12 +43,12 @@ class RayTracer:
         return room
 
     def _init_cuboid(self):
-        frontRightCuboidPlane = Plane(np.array([0.6, -0.75, -1]), np.array([0, 1, 0]), np.array([0.25, 0, -0.25]))
-        frontLeftCuboidPlane = Plane(np.array([0.6, -0.75, -1]), np.array([0, 1, 0]), np.array([-0.25, 0, -0.25]))
-        backLeftCuboidPlane = Plane(np.array([0.6, -0.75, -1.5]), np.array([0, 1, 0]), np.array([-0.25, 0, 0.25]))
-        backRightCuboidPlane = Plane(np.array([0.6, -0.75, -1.5]), np.array([0, 1, 0]), np.array([0.25, 0, 0.25]))
+        frontRightCuboidPlane = Plane(np.array([0.6, 0.75, -1]), np.array([0, -1, 0]), np.array([0.25, 0, -0.25]))
+        frontLeftCuboidPlane = Plane(np.array([0.6, 0.75, -1]), np.array([0, -1, 0]), np.array([-0.25, 0, -0.25]))
+        backLeftCuboidPlane = Plane(np.array([0.6, 0.75, -1.5]), np.array([0, -1, 0]), np.array([-0.25, 0, 0.25]))
+        backRightCuboidPlane = Plane(np.array([0.6, 0.75, -1.5]), np.array([0, -1, 0]), np.array([0.25, 0, 0.25]))
         #bottomCuboidPlane = Plane(np.array([0.6, -0.75, -0.5]), np.array([0.25, 0, 0.25]), np.array([0.25, 0, -0.25]))
-        topCuboidPlane = Plane(np.array([0.6, 0.25, -1]), np.array([-0.25, 0, -0.25]), np.array([0.25, 0, -0.25]))
+        topCuboidPlane = Plane(np.array([0.6, -0.25, -1]), np.array([-0.25, 0, -0.25]), np.array([0.25, 0, -0.25]))
 
         ambientMult = 0.1
         diffuseMult = 0.7
@@ -70,12 +70,12 @@ class RayTracer:
         return cuboid
 
     def _init_cube(self):
-        frontCubePlane = Plane(np.array([0.75, -0.75, -0.5]), np.array([0, 0.5, 0]), np.array([-0.5, 0, 0]))
-        leftCubePlane = Plane(np.array([0.75, -0.75, -0.5]), np.array([0, 0.5, 0]), np.array([0, 0, -0.5]))
-        bottomCubePlane = Plane(np.array([0.75, -0.75, -0.5]), np.array([-0.5, 0, 0]), np.array([0, 0, -0.5]))
-        backCubePlane = Plane(np.array([0.25, -0.25, -1]), np.array([0.5, 0, 0]), np.array([0, -0.5, 0]))
-        rightCubePlane = Plane(np.array([0.25, -0.25, -1]), np.array([0, 0, 0.5]), np.array([0, -0.5, 0]))
-        topCubePlane = Plane(np.array([0.25, -0.25, -1]), np.array([0, 0, 0.5]), np.array([0.5, 0, 0]))
+        frontCubePlane = Plane(np.array([-0.75, 0.75, -1]), np.array([0, -0.5, 0]), np.array([0.5, 0, 0]))
+        leftCubePlane = Plane(np.array([-0.75, 0.75, -1]), np.array([0, -0.5, 0]), np.array([0, 0, -0.5]))
+        bottomCubePlane = Plane(np.array([-0.75, 0.75, -1.5]), np.array([0.5, 0, 0]), np.array([0, 0, -0.5]))
+        backCubePlane = Plane(np.array([-0.25, 0.25, -1.5]), np.array([-0.5, 0, 0]), np.array([0, 0.5, 0]))
+        rightCubePlane = Plane(np.array([-0.25, 0.25, -1.5]), np.array([0, 0, 0.5]), np.array([0, 0.5, 0]))
+        topCubePlane = Plane(np.array([-0.25, 0.25, -1.5]), np.array([0, 0, 0.5]), np.array([-0.5, 0, 0]))
 
         ambientMult = 0.1
         diffuseMult = 0.7
@@ -102,12 +102,12 @@ class RayTracer:
         cube = self._init_cube()
         allSurfaceList = room.sflist
         allSurfaceList.extend(cuboid.sflist)
-        #allSurfaceList.extend(cube.sflist)
+        allSurfaceList.extend(cube.sflist)
         allSurfaces = Surfaces(*allSurfaceList)
         return allSurfaces
 
     def _initLightSource(self):
-        supVec = np.array([0.25, 0.749, -1])
+        supVec = np.array([0.25, -0.749, -1])
         dirVec1 = np.array([-0.2, 0, 0])
         dirVec2 = np.array([0, 0, -0.2])
         plane = Plane(supVec, dirVec1, dirVec2)
