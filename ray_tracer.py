@@ -13,11 +13,11 @@ from phong_properties import PhongProperties
 class RayTracer:
 
     def _init_room(self):
-        leftWallPlane = Plane(np.array([1.25, -0.75, 0]), np.array([0, 1.5, 0]), np.array([0, 0, 2.5]))
-        rightWallPlane = Plane(np.array([-1.25, -0.75, 0]), np.array([0, 1.5, 0]), np.array([0, 0, 2.5]))
-        bottomWallPlane = Plane(np.array([1.25, -0.75, 0]), np.array([0, 0, 2.5]), np.array([-2.5, 0, 0]))
-        topWallPlane = Plane(np.array([1.25, 0.75, 0]), np.array([-2.5, 0, 0]), np.array([0, 0, 2.5]))
-        backWallPlane = Plane(np.array([1.25, -0.75, 2.5]), np.array([-2.5, 0, 0]), np.array([0, 1.5, 0]))
+        leftWallPlane = Plane(np.array([1.25, -0.75, 0]), np.array([0, 1.5, 0]), np.array([0, 0, -2.5]))
+        rightWallPlane = Plane(np.array([-1.25, -0.75, 0]), np.array([0, 1.5, 0]), np.array([0, 0, -2.5]))
+        bottomWallPlane = Plane(np.array([1.25, -0.75, 0]), np.array([0, 0, -2.5]), np.array([-2.5, 0, 0]))
+        topWallPlane = Plane(np.array([1.25, 0.75, 0]), np.array([-2.5, 0, 0]), np.array([0, 0, -2.5]))
+        backWallPlane = Plane(np.array([1.25, -0.75, -2.5]), np.array([-2.5, 0, 0]), np.array([0, 1.5, 0]))
         
         ambientMult = 0.1
         diffuseMult = 0.7
@@ -30,11 +30,11 @@ class RayTracer:
         whitePhong = PhongProperties(whiteColor, ambientMult, diffuseMult, specularMult)
 
         shinyness = 16
-        reflection = 0.6
+        reflection = 0.2
 
         #left wall red, right wall blue, rest white
-        leftWall = Surface(leftWallPlane, redPhong, shinyness, reflection)
-        rightWall = Surface(rightWallPlane, bluePhong, shinyness, reflection)
+        rightWall = Surface(leftWallPlane, bluePhong, shinyness, reflection)
+        leftWall = Surface(rightWallPlane, redPhong, shinyness, reflection)
         bottomWall = Surface(bottomWallPlane, whitePhong, shinyness, reflection)
         topWall = Surface(topWallPlane, whitePhong, shinyness, reflection)
         backWall = Surface(backWallPlane, whitePhong, shinyness, reflection)
@@ -43,12 +43,12 @@ class RayTracer:
         return room
 
     def _init_cuboid(self):
-        frontRightCuboidPlane = Plane(np.array([-0.6, -0.75, 0.5]), np.array([0, 1, 0]), np.array([-0.25, 0, 0.25]))
-        frontLeftCuboidPlane = Plane(np.array([-0.6, -0.75, 0.5]), np.array([0, 1, 0]), np.array([0.25, 0, 0.25]))
-        backLeftCuboidPlane = Plane(np.array([-0.6, -0.75, 1]), np.array([0, 1, 0]), np.array([0.25, 0, -0.25]))
-        backRightCuboidPlane = Plane(np.array([-0.6, -0.75, 1]), np.array([0, 1, 0]), np.array([-0.25, 0, -0.25]))
-        bottomCuboidPlane = Plane(np.array([-0.6, -0.75, 0.5]), np.array([-0.25, 0, 0.25]), np.array([0.25, 0, 0.25]))
-        topCuboidPlane = Plane(np.array([-0.6, 0.25, 0.5]), np.array([-0.25, 0, 0.25]), np.array([0.25, 0, 0.25]))
+        frontRightCuboidPlane = Plane(np.array([-0.6, -0.75, -0.5]), np.array([0, 1, 0]), np.array([-0.25, 0, -0.25]))
+        frontLeftCuboidPlane = Plane(np.array([-0.6, -0.75, -0.5]), np.array([0, 1, 0]), np.array([0.25, 0, -0.25]))
+        backLeftCuboidPlane = Plane(np.array([-0.6, -0.75, -1]), np.array([0, 1, 0]), np.array([0.25, 0, 0.25]))
+        backRightCuboidPlane = Plane(np.array([-0.6, -0.75, -1]), np.array([0, 1, 0]), np.array([-0.25, 0, 0.25]))
+        bottomCuboidPlane = Plane(np.array([-0.6, -0.75, -0.5]), np.array([-0.25, 0, -0.25]), np.array([0.25, 0, -0.25]))
+        topCuboidPlane = Plane(np.array([-0.6, 0.25, -0.5]), np.array([-0.25, 0, -0.25]), np.array([0.25, 0, -0.25]))
 
         ambientMult = 0.1
         diffuseMult = 0.7
@@ -70,12 +70,12 @@ class RayTracer:
         return cuboid
 
     def _init_cube(self):
-        frontCubePlane = Plane(np.array([0.75, -0.75, 0.5]), np.array([0, 0.5, 0]), np.array([-0.5, 0, 0]))
-        leftCubePlane = Plane(np.array([0.75, -0.75, 0.5]), np.array([0, 0.5, 0]), np.array([0, 0, 0.5]))
-        bottomCubePlane = Plane(np.array([0.75, -0.75, 0.5]), np.array([-0.5, 0, 0]), np.array([0, 0, 0.5]))
-        backCubePlane = Plane(np.array([0.25, -0.25, 1]), np.array([0.5, 0, 0]), np.array([0, -0.5, 0]))
-        rightCubePlane = Plane(np.array([0.25, -0.25, 1]), np.array([0, 0, -0.5]), np.array([0, -0.5, 0]))
-        topCubePlane = Plane(np.array([0.25, -0.25, 1]), np.array([0, 0, -0.5]), np.array([0.5, 0, 0]))
+        frontCubePlane = Plane(np.array([0.75, -0.75, -0.5]), np.array([0, 0.5, 0]), np.array([-0.5, 0, 0]))
+        leftCubePlane = Plane(np.array([0.75, -0.75, -0.5]), np.array([0, 0.5, 0]), np.array([0, 0, -0.5]))
+        bottomCubePlane = Plane(np.array([0.75, -0.75, -0.5]), np.array([-0.5, 0, 0]), np.array([0, 0, -0.5]))
+        backCubePlane = Plane(np.array([0.25, -0.25, -1]), np.array([0.5, 0, 0]), np.array([0, -0.5, 0]))
+        rightCubePlane = Plane(np.array([0.25, -0.25, -1]), np.array([0, 0, 0.5]), np.array([0, -0.5, 0]))
+        topCubePlane = Plane(np.array([0.25, -0.25, -1]), np.array([0, 0, 0.5]), np.array([0.5, 0, 0]))
 
         ambientMult = 0.1
         diffuseMult = 0.7
@@ -101,26 +101,28 @@ class RayTracer:
         cuboid = self._init_cuboid()
         cube = self._init_cube()
         allSurfaceList = room.sflist
-        allSurfaceList.extend(cuboid.sflist)
-        allSurfaceList.extend(cube.sflist)
+        #allSurfaceList.extend(cuboid.sflist)
+        #allSurfaceList.extend(cube.sflist)
         allSurfaces = Surfaces(*allSurfaceList)
         return allSurfaces
 
     def _initLightSource(self):
-        supVec = np.array([0.25, 0.749, 1])
+        supVec = np.array([0.25, 0.749, -1])
         dirVec1 = np.array([-0.2, 0, 0])
-        dirVec2 = np.array([0, 0, 0.2])
+        dirVec2 = np.array([0, 0, -0.2])
         plane = Plane(supVec, dirVec1, dirVec2)
         phongProp = PhongProperties(np.array([1, 1, 1]), 1, 1, 1)
         lightSource = LightSource(self.allSurfaces, plane, phongProp)
         return lightSource
 
-    def __init__(self, heightpx, widthpx):
+    def __init__(self, heightpx, widthpx, max_depth=3, randomShadowRays = 4, systematicShadowRayRoot = 2):
         self.camera = Camera(heightpx, widthpx)
         self.allSurfaces = self._initAllSurfaces()
         self.lightSource = self._initLightSource()
         self._picturecap = np.zeros((heightpx, widthpx, 3))
-        self._max_depth = 5
+        self._max_depth = max_depth
+        self._rSR = randomShadowRays
+        self._sSRR = systematicShadowRayRoot
 
     def _getPositiveNormVec(self, normVec, surfPos, origin):
         NormPointOrigVek= origin - (surfPos + normVec)
@@ -130,7 +132,8 @@ class RayTracer:
         if distNOV < distAOV:
             return normVec
         elif distNOV > distAOV:
-            return 0 - normVec
+            normVec *= -1
+            return normVec
 
     def traceRays(self, heightPx, widthPx):
         ray = self.camera.calculateRay(widthPx, heightPx)
@@ -146,16 +149,19 @@ class RayTracer:
             surfNorm = collisionSurf.norm
             surfNorm = self._getPositiveNormVec(surfNorm, surfPos, ray.origin)
             #shiftedPosVek des auftrittspunkt der surface
-            surfShiftPos = surfPos + 1e-6 * surfNorm
+            if surfNorm is None: #happens if surfPos == ray.origin
+                break
+            surfShiftPos = surfPos + 1e-5 * surfNorm
             #define illumination var
             illumination = np.zeros((3))
             #calculate shaded part
-            shadedPart = float(self.lightSource.checkIfShadowed(surfPos, randomShadowRayCount=0, systematicShadowRayCountRoot=2))
+            shadedPart = float(self.lightSource.checkIfShadowed(surfShiftPos, randomShadowRayCount=self._rSR, systematicShadowRayCountRoot=self._sSRR))
             if shadedPart != 1:
-                illumination += self.lightSource.getAmbient()
-                illumination += self.lightSource.getDiffuse(surfNorm, surfPos)
-                illumination += self.lightSource.getSpecular(surfNorm, surfPos, self.camera.cameraCords,
-                    collisionSurf.shinyness)
+                illumination += collisionSurf.phong.ambient * self.lightSource.getAmbient()
+                illumination += collisionSurf.phong.diffuse * self.lightSource.getDiffuse(surfNorm, surfPos)
+                illumination += collisionSurf.phong.specular * self.lightSource.getSpecular(surfNorm, surfPos,
+                    self.camera.cameraCords, collisionSurf.shinyness)
+                illumination *= (1 - shadedPart)
                 color += reflection * illumination
             reflection *= collisionSurf.reflection
             ray.reflect(surfNorm, surfShiftPos)

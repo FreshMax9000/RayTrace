@@ -12,7 +12,7 @@ class Surface:
         """Constructor method
         """
         self.plane = plane
-        self.phongProperties = phongProp
+        self.phong = phongProp
 
         self._shinyness = shinyness
         self._reflection = reflection

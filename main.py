@@ -5,9 +5,9 @@ from ray_tracer import RayTracer
 if __name__ == "__main__":
     startTime = time.time()
 
-    height = 200
-    width = 300
-    rayTracer = RayTracer(height, width)
+    height = 300
+    width = 400
+    rayTracer = RayTracer(height, width, max_depth=3, randomShadowRays=0, systematicShadowRayRoot=3)
 
     for height_px in range(height):
         for width_px in range(width):
