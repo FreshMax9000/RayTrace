@@ -116,7 +116,7 @@ class RayTracer:
         return allSurfaces
 
     def _initLightSource(self):
-        supVec = np.array([0.25, -0.749, -1.75])
+        supVec = np.array([0.25, -0.5, -1.75])
         dirVec1 = np.array([-0.2, 0, 0])
         dirVec2 = np.array([0, 0, -0.2])
         plane = Plane(supVec, dirVec1, dirVec2)
@@ -166,10 +166,20 @@ class RayTracer:
             #calculate shaded part
             shadedPart = float(self.lightSource.checkIfShadowed(surfShiftPos, randomShadowRayCount=self._rSR, systematicShadowRayCountRoot=self._sSRR))
             illumination += collisionSurf.phong.ambient * self.lightSource.getAmbient()
-            if shadedPart != 1:                
+            if shadedPart != 1:
+                """
                 illumination += collisionSurf.phong.diffuse * self.lightSource.getDiffuse(surfNorm, surfPos)
+                
                 illumination += collisionSurf.phong.specular * self.lightSource.getSpecular(surfNorm, surfPos,
                     self.camera.cameraCords, collisionSurf.shinyness)
+                """
+                
+                lightDiffuse, lightSpecular = self.lightSource.getIllumination(surfNorm, surfPos,
+                    self.camera.cameraCords, collisionSurf.shinyness)
+                illumination += collisionSurf.phong.diffuse * lightDiffuse
+                
+                illumination += collisionSurf.phong.specular * lightSpecular
+                
                 illumination *= (1 - shadedPart)
                 color += reflection * illumination
             reflection *= collisionSurf.reflection

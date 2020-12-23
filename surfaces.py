@@ -15,6 +15,9 @@ class Surfaces:
         
         return self.__sflist
 
+    #def getCollisionObject(self, ray):
+        
+
     def getCollisionObject(self, ray):
         #Initialiesieren der Matrixen für die  linalg.solve Funktion
         #Werden initialiesiert, sodass sie in for-Schleife Stück für Stück gesetzt werden können

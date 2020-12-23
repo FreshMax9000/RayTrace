@@ -1,5 +1,7 @@
 import numpy as np
 
+from ray import Ray
+
 class Plane:
     def __init__(self, supVec: np.array, dirVec1: np.array, dirVec2: np.array):
         """Constructor method
