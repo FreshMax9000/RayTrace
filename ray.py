@@ -31,6 +31,9 @@ class Ray:
         """
         return vector / np.linalg.norm(vector)
 
+    def calcPos(self, n):
+        return self.origin + n * self.normDirection
+
     def reflect(self, surfNorm, surfShiftPos):
         self.origin = surfShiftPos
         self.normDirection = self.normDirection - 2 * np.dot(self.normDirection, surfNorm) * surfNorm
