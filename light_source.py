@@ -85,3 +85,9 @@ class LightSource:
         cameraDir = Ray.normalizeVector(cameraPos - pos)
         optReflAxis = Ray.normalizeVector(lightDir + cameraDir)
         return self._phong.specular * np.dot(surfNormV, optReflAxis) ** shinyness
+
+    def getClosesPointOfLight(self, ray: Ray):
+        n = (np.dot(self._plane.))
+
+    def getIllumination(self, surfNormV: np.ndarray, pos: np.ndarray, cameraPos: np.ndarray,
+        shinyness: float):

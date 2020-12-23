@@ -7,3 +7,9 @@ class Plane:
         self.supVec = supVec
         self.dirVec1 = dirVec1
         self.dirVec2 = dirVec2
+
+    @property
+    def norm(self):
+        """Normal vector of surface
+        """
+        return Ray.normalizeVector(np.cross(self.dirVec1, self.dirVec2))
