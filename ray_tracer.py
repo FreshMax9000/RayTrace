@@ -48,7 +48,7 @@ class RayTracer:
         backWall = Surface(backWallPlane, whitePhong, shinyness, reflection)
         frontWall = Surface(frontWallPlane, whitePhong, shinyness, 0.0)
 
-        room = Surfaces(leftWall, rightWall, bottomWall, topWall, backWall, frontWall)
+        room = Surfaces(leftWall, rightWall, bottomWall, topWall, backWall)
         return room
 
     def _init_cuboid(self):
@@ -173,6 +173,8 @@ class RayTracer:
                 illumination *= (1 - shadedPart)
                 color += reflection * illumination
             reflection *= collisionSurf.reflection
+            if reflection == 0:
+                break
             ray.reflect(surfNorm, surfShiftPos)
         self._picturecap[heightPx, widthPx] = np.clip(color, 0, 1)
 
