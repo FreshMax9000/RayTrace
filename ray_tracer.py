@@ -116,7 +116,7 @@ class RayTracer:
         return allSurfaces
 
     def _initLightSource(self):
-        supVec = np.array([0.25, -0.5, -1.75])
+        supVec = np.array([0.1, -0.375, -1.75])
         dirVec1 = np.array([-0.2, 0, 0])
         dirVec2 = np.array([0, 0, -0.2])
         plane = Plane(supVec, dirVec1, dirVec2)
@@ -136,8 +136,8 @@ class RayTracer:
     def _getPositiveNormVec(self, normVec, surfPos, origin):
         NormPointOrigVek= origin - (surfPos + normVec)
         AntiPointOrigVek= origin - (surfPos - normVec)
-        distNOV = np.sqrt(np.square(NormPointOrigVek[0]) + np.square(NormPointOrigVek[1]) + np.square(NormPointOrigVek[2]))
-        distAOV =np.sqrt(np.square(AntiPointOrigVek[0]) + np.square(AntiPointOrigVek[1]) + np.square(AntiPointOrigVek[2]))
+        distNOV = np.linalg.norm(NormPointOrigVek)
+        distAOV = np.linalg.norm(AntiPointOrigVek)
         if distNOV < distAOV:
             return normVec
         elif distNOV > distAOV:
@@ -145,6 +145,8 @@ class RayTracer:
             return normVec
 
     def traceRays(self, heightPx, widthPx):
+        if heightPx == 27 and widthPx == 80:
+            print("yahoo!")
         ray = self.camera.calculateRay(widthPx, heightPx)
         color = np.zeros((3))
         reflection = 1
@@ -155,17 +157,14 @@ class RayTracer:
             #pos auf der surface
             surfPos = ray.origin + minDistance * ray.normDirection
             #normVek der surface
-            surfNorm = collisionSurf.norm
-            surfNorm = self._getPositiveNormVec(surfNorm, surfPos, ray.origin)
+            surfNorm = collisionSurf.plane.getPositiveNormVec(ray.origin)
             #shiftedPosVek des auftrittspunkt der surface
-            if surfNorm is None: #happens if surfPos == ray.origin
-                break
             surfShiftPos = surfPos + 1e-5 * surfNorm
             #define illumination var
             illumination = np.zeros((3))
             #calculate shaded part
             shadedPart = float(self.lightSource.checkIfShadowed(surfShiftPos, randomShadowRayCount=self._rSR, systematicShadowRayCountRoot=self._sSRR))
-            illumination += collisionSurf.phong.ambient * self.lightSource.getAmbient()
+            #illumination += collisionSurf.phong.ambient * self.lightSource.getAmbient()
             if shadedPart != 1:
                 """
                 illumination += collisionSurf.phong.diffuse * self.lightSource.getDiffuse(surfNorm, surfPos)
@@ -178,7 +177,7 @@ class RayTracer:
                     self.camera.cameraCords, collisionSurf.shinyness)
                 illumination += collisionSurf.phong.diffuse * lightDiffuse
                 
-                illumination += collisionSurf.phong.specular * lightSpecular
+                #illumination += collisionSurf.phong.specular * lightSpecular
                 
                 illumination *= (1 - shadedPart)
                 color += reflection * illumination

@@ -5,9 +5,9 @@ from timestopper import TimeStopper
 if __name__ == "__main__":
     timerkek = TimeStopper()
 
-    height = 300
-    width = 400
-    rayTracer = RayTracer(height, width, max_depth=3, randomShadowRays=4, systematicShadowRayRoot=5)
+    height = 90
+    width = 160
+    rayTracer = RayTracer(height, width, max_depth=3, randomShadowRays=0, systematicShadowRayRoot=2)
 
     for height_px in range(height):
         for width_px in range(width):

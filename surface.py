@@ -33,4 +33,6 @@ class Surface:
     def norm(self):
         """Normal vector of surface
         """
-        return Ray.normalizeVector(np.cross(self.plane.dirVec1, self.plane.dirVec2))
+        return self.plane.norm
+
+    

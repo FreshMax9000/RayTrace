@@ -68,27 +68,21 @@ class LightSource:
         #check how many shadow rays hit an object
         blockedRays = 0
         for rayDistance in shadowRayDistanceList:
-            if self._surfaces.getCollisionObject(rayDistance[0])[1] < rayDistance[1]:
+            _, closestDistance = self._surfaces.getCollisionObject(rayDistance[0])
+            if closestDistance < rayDistance[1]:
                 blockedRays += 1
         return float(blockedRays) / (randomShadowRayCount + systematicShadowRayCountRoot ** 2)
 
     def getAmbient(self):
         return self._phong.ambient
 
-    def getDiffuse(self, surfNormV: np.ndarray, pos: np.ndarray):
-        lightDir = self._middle - pos
-        return self._phong.diffuse * np.dot(lightDir, surfNormV)
-
-    def getSpecular(self, surfNormV: np.ndarray, pos: np.ndarray, cameraPos: np.ndarray,
-        shinyness: float):
-        lightDir = Ray.normalizeVector(self._middle - pos)
-        cameraDir = Ray.normalizeVector(cameraPos - pos)
-        optReflAxis = Ray.normalizeVector(lightDir + cameraDir)
-        return self._phong.specular * np.dot(surfNormV, optReflAxis) ** shinyness
-
     def getClosestPointOfLight(self, ray: Ray):
-        lightNorm = self._plane.norm
-        n = (np.dot(lightNorm, self._plane.supVec) - np.dot(lightNorm, ray.origin)) / np.dot(lightNorm, ray.normDirection)
+        lightN = self._plane.getPositiveNormVec(ray.origin)
+        scalarLightNDir = np.dot(lightN, ray.normDirection)
+        if scalarLightNDir != 0:
+            n = (np.dot(lightN, self._plane.supVec) - np.dot(lightN, ray.origin)) / np.dot(lightN, ray.normDirection)
+        else: 
+            n = 0
         lightPlaneIntersec = ray.calcPos(n)
         Ps = lightPlaneIntersec - self._plane.supVec
         closestPoint = np.clip(Ps, 0, self._plane.dirVec1 + self._plane.dirVec2)
