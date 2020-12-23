@@ -1,9 +1,9 @@
-import time
 
 from ray_tracer import RayTracer
+from timestopper import TimeStopper
 
 if __name__ == "__main__":
-    startTime = time.time()
+    timerkek = TimeStopper()
 
     height = 300
     width = 400
@@ -12,8 +12,9 @@ if __name__ == "__main__":
     for height_px in range(height):
         for width_px in range(width):
             rayTracer.traceRays(height_px, width_px)
-        print("%d / %d"%(height_px, height))
+        print("%d / %d . %s"%(height_px, height,timerkek.getPassedTimeString(height_px,height)))
+        
     
     rayTracer.printImage("images/test_image")
     print("---Finished---")
-    print("The render took %fs\n"%(time.time() - startTime))
+    #print("The render took %fs\n"%(time.time() - startTime))
