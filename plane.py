@@ -9,6 +9,8 @@ class Plane:
         self.supVec = supVec
         self.dirVec1 = dirVec1
         self.dirVec2 = dirVec2
+        self._trans2dTo3d = np.array([self.dirVec1, self.dirVec2])
+        self._trans3dTo2d = np.linalg.pinv(self._trans2dTo3d)
 
     @property
     def norm(self):
@@ -22,3 +24,12 @@ class Plane:
         distNOV = np.linalg.norm(origin - (self.supVec + self.norm))
         distAOV = np.linalg.norm(origin - (self.supVec - self.norm))
         return self.norm if distNOV < distAOV else -1 * self.norm
+
+    def checkPointInBorders(self, point: np.ndarray):
+        point2d = point.dot(self._trans3dTo2d)
+        return np.all(np.logical_and(0 <= point2d,  point2d <= 1))
+
+    def getClosestPoint(self, point: np.ndarray):
+        point2d = point.dot(self._trans3dTo2d)
+        closest2d = np.clip(point2d, 0, 1)
+        return closest2d.dot(self._trans2dTo3d)

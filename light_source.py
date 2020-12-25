@@ -77,15 +77,19 @@ class LightSource:
         return self._phong.ambient
 
     def getClosestPointOfLight(self, ray: Ray):
-        lightN = self._plane.getPositiveNormVec(ray.origin)
+        #lightN = self._plane.getPositiveNormVec(ray.origin)
+        lightN = self._plane.norm
         scalarLightNDir = np.dot(lightN, ray.normDirection)
-        if scalarLightNDir != 0:
-            n = (np.dot(lightN, self._plane.supVec) - np.dot(lightN, ray.origin)) / np.dot(lightN, ray.normDirection)
-        else: 
-            n = 0
+        if scalarLightNDir == 0:
+            n = 10000
+        else:
+            if scalarLightNDir > 0:
+                n = (np.dot(lightN, self._plane.supVec) - np.dot(lightN, ray.origin)) / scalarLightNDir
+            else:
+                n = (np.dot(lightN, self._plane.supVec) - np.dot(lightN, ray.origin)) / scalarLightNDir
         lightPlaneIntersec = ray.calcPos(n)
         Ps = lightPlaneIntersec - self._plane.supVec
-        closestPoint = np.clip(Ps, 0, self._plane.dirVec1 + self._plane.dirVec2)
+        closestPoint = self._plane.getClosestPoint(Ps)
         return closestPoint + self._plane.supVec # The point as viewed from the cartesian origin
 
     def getIllumination(self, surfNormV: np.ndarray, pos: np.ndarray, cameraPos: np.ndarray,
@@ -96,7 +100,7 @@ class LightSource:
         #specular
         vectorFromCam = pos - cameraPos
         reflectedVector = vectorFromCam - 2 * (np.dot(vectorFromCam, surfNormV) * surfNormV)
-        lightDir = Ray.normalizeVector(self.getClosestPointOfLight(Ray(pos, reflectedVector)) - pos)
+        LightDir = Ray.normalizeVector(self.getClosestPointOfLight(Ray(pos, reflectedVector)) - pos)
         cameraDir = Ray.normalizeVector(cameraPos - pos)
         optReflAxis = Ray.normalizeVector(lightDir + cameraDir)
         specular = self._phong.specular * np.dot(surfNormV, optReflAxis) ** shinyness

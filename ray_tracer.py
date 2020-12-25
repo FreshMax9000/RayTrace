@@ -38,7 +38,7 @@ class RayTracer:
         whitePhong = PhongProperties(whiteColor, ambientMult, diffuseMult, specularMult)
 
         shinyness = 3.0
-        reflection = 0.0
+        reflection = 0.1
 
         #left wall red, right wall blue, rest white
         rightWall = Surface(leftWallPlane, bluePhong, shinyness, reflection)
@@ -116,9 +116,9 @@ class RayTracer:
         return allSurfaces
 
     def _initLightSource(self):
-        supVec = np.array([0.1, -0.375, -1.75])
-        dirVec1 = np.array([-0.2, 0, 0])
-        dirVec2 = np.array([0, 0, -0.2])
+        supVec = np.array([0.2, -0.749, -1.4])
+        dirVec1 = np.array([-0.4, 0, 0])
+        dirVec2 = np.array([0, 0, -0.4])
         plane = Plane(supVec, dirVec1, dirVec2)
         phongProp = PhongProperties(np.array([1, 1, 1]), 1, 1, 1)
         lightSource = LightSource(self.allSurfaces, plane, phongProp)
@@ -145,8 +145,6 @@ class RayTracer:
             return normVec
 
     def traceRays(self, heightPx, widthPx):
-        if heightPx == 27 and widthPx == 80:
-            print("yahoo!")
         ray = self.camera.calculateRay(widthPx, heightPx)
         color = np.zeros((3))
         reflection = 1
@@ -163,7 +161,8 @@ class RayTracer:
             #define illumination var
             illumination = np.zeros((3))
             #calculate shaded part
-            shadedPart = float(self.lightSource.checkIfShadowed(surfShiftPos, randomShadowRayCount=self._rSR, systematicShadowRayCountRoot=self._sSRR))
+            #shadedPart = float(self.lightSource.checkIfShadowed(surfShiftPos, randomShadowRayCount=self._rSR, systematicShadowRayCountRoot=self._sSRR))
+            shadedPart = 0.0
             #illumination += collisionSurf.phong.ambient * self.lightSource.getAmbient()
             if shadedPart != 1:
                 """
@@ -175,9 +174,9 @@ class RayTracer:
                 
                 lightDiffuse, lightSpecular = self.lightSource.getIllumination(surfNorm, surfPos,
                     self.camera.cameraCords, collisionSurf.shinyness)
-                illumination += collisionSurf.phong.diffuse * lightDiffuse
+                #illumination += collisionSurf.phong.diffuse * lightDiffuse
                 
-                #illumination += collisionSurf.phong.specular * lightSpecular
+                illumination += collisionSurf.phong.specular * lightSpecular
                 
                 illumination *= (1 - shadedPart)
                 color += reflection * illumination
