@@ -100,7 +100,7 @@ class LightSource:
         #specular
         vectorFromCam = pos - cameraPos
         reflectedVector = vectorFromCam - 2 * (np.dot(vectorFromCam, surfNormV) * surfNormV)
-        LightDir = Ray.normalizeVector(self.getClosestPointOfLight(Ray(pos, reflectedVector)) - pos)
+        lightDir = Ray.normalizeVector(self.getClosestPointOfLight(Ray(pos, reflectedVector)) - pos)
         cameraDir = Ray.normalizeVector(cameraPos - pos)
         optReflAxis = Ray.normalizeVector(lightDir + cameraDir)
         specular = self._phong.specular * np.dot(surfNormV, optReflAxis) ** shinyness
