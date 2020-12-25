@@ -58,38 +58,41 @@ class LightSource:
             float: A value between 0 and 1 depending how much the given point is blocked from the light
             source. 0 = not blocked and 1 = fully blocked
         """
-        shadowRayDistanceList = []
-        #Generate random shadow rays
-        for i in range(randomShadowRayCount):
-            shadowRayDistanceList.append(self._generateRandomShadowRay(position))
-        #Generate systematic shadow rays
-        shadowRayDistanceList.extend(self._generateSystematicShadowRayList(position,
-            systematicShadowRayCountRoot))
-        #check how many shadow rays hit an object
-        blockedRays = 0
-        for rayDistance in shadowRayDistanceList:
-            _, closestDistance = self._surfaces.getCollisionObject(rayDistance[0])
-            if closestDistance < rayDistance[1]:
-                blockedRays += 1
-        return float(blockedRays) / (randomShadowRayCount + systematicShadowRayCountRoot ** 2)
+        if randomShadowRayCount > 0 or systematicShadowRayCountRoot > 0:
+            shadowRayDistanceList = []
+            #Generate random shadow rays
+            for i in range(randomShadowRayCount):
+                shadowRayDistanceList.append(self._generateRandomShadowRay(position))
+            #Generate systematic shadow rays
+            shadowRayDistanceList.extend(self._generateSystematicShadowRayList(position,
+                systematicShadowRayCountRoot))
+            #check how many shadow rays hit an object
+            blockedRays = 0
+            for rayDistance in shadowRayDistanceList:
+                _, closestDistance = self._surfaces.getCollisionObject(rayDistance[0])
+                if closestDistance < rayDistance[1]:
+                    blockedRays += 1
+            return float(blockedRays) / (randomShadowRayCount + systematicShadowRayCountRoot ** 2)
+        else:
+            return 0.0
 
     def getAmbient(self):
         return self._phong.ambient
 
     def getClosestPointOfLight(self, ray: Ray):
-        #lightN = self._plane.getPositiveNormVec(ray.origin)
         lightN = self._plane.norm
         scalarLightNDir = np.dot(lightN, ray.normDirection)
         if scalarLightNDir == 0:
-            n = 10000
-        else:
-            if scalarLightNDir > 0:
-                n = (np.dot(lightN, self._plane.supVec) - np.dot(lightN, ray.origin)) / scalarLightNDir
-            else:
-                n = (np.dot(lightN, self._plane.supVec) - np.dot(lightN, ray.origin)) / scalarLightNDir
+            ray.normDirection += 1e-5 # temporary hack, fix scalar product == 0 by adding small offset
+            scalarLightNDir = np.dot(lightN, ray.normDirection) 
+        n = (np.dot(lightN, self._plane.supVec) - np.dot(lightN, ray.origin)) / scalarLightNDir
         lightPlaneIntersec = ray.calcPos(n)
         Ps = lightPlaneIntersec - self._plane.supVec
-        closestPoint = self._plane.getClosestPoint(Ps)
+        if n >= 0: #if the ray hits the plane with positive n       
+            closestPoint = self._plane.getClosestPoint(Ps) # it must be the closest point of light
+        else:
+            closestPoint = self._plane.getFurthestPoint(Ps) # else the farthest
+        
         return closestPoint + self._plane.supVec # The point as viewed from the cartesian origin
 
     def getIllumination(self, surfNormV: np.ndarray, pos: np.ndarray, cameraPos: np.ndarray,

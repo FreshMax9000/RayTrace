@@ -33,3 +33,9 @@ class Plane:
         point2d = point.dot(self._trans3dTo2d)
         closest2d = np.clip(point2d, 0, 1)
         return closest2d.dot(self._trans2dTo3d)
+
+    def getFurthestPoint(self, point: np.ndarray):
+        point2d = point.dot(self._trans3dTo2d)
+        closest2d = np.clip(point2d, 0, 1)
+        furthest2d = np.array([1, 1]) - closest2d
+        return furthest2d.dot(self._trans2dTo3d)

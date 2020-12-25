@@ -16,7 +16,7 @@ class Camera:
     def calculateRay(self, x: int, y: int):
         pixel_x_pos = x * 2 / self._widthpx + self._screen.left
         pixel_y_pos = y * (2 / self.ratio) / self._heightpx + self._screen.bottom
-        direction = np.array([pixel_x_pos, pixel_y_pos, -1.5])
+        direction = np.array([pixel_x_pos, pixel_y_pos, -1.25])
         ray = Ray(self.cameraCords, direction)
         return ray
     
