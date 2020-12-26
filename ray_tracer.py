@@ -81,7 +81,7 @@ class RayTracer:
     def _init_cube(self):
         frontCubePlane = Plane(np.array([-0.75, 0.75, -1]), np.array([0, -0.5, 0]), np.array([0.5, 0, 0]))
         leftCubePlane = Plane(np.array([-0.75, 0.75, -1]), np.array([0, -0.5, 0]), np.array([0, 0, -0.5]))
-        bottomCubePlane = Plane(np.array([-0.75, 0.75, -1.5]), np.array([0.5, 0, 0]), np.array([0, 0, -0.5]))
+        #bottomCubePlane = Plane(np.array([-0.75, 0.75, -1.5]), np.array([0.5, 0, 0]), np.array([0, 0, -0.5]))
         backCubePlane = Plane(np.array([-0.75, 0.75, -1.5]), np.array([0.4999, 0, 0]), np.array([0, -0.4999, 0]))
         rightCubePlane = Plane(np.array([-0.25, 0.25, -1.5]), np.array([0, 0, 0.5]), np.array([0, 0.5, 0]))
         topCubePlane = Plane(np.array([-0.25, 0.25, -1.5]), np.array([0, 0, 0.5]), np.array([-0.5, 0, 0]))
@@ -97,12 +97,12 @@ class RayTracer:
 
         frontCube = Surface(frontCubePlane, yellowPhong, shinyness, reflection)
         leftCube = Surface(leftCubePlane, yellowPhong, shinyness, reflection)
-        bottomCube = Surface(bottomCubePlane, yellowPhong, shinyness, reflection)
+        #bottomCube = Surface(bottomCubePlane, yellowPhong, shinyness, reflection)
         backCube = Surface(backCubePlane, yellowPhong, shinyness, reflection)
         rightCube = Surface(rightCubePlane, yellowPhong, shinyness, reflection)
         topCube = Surface(topCubePlane, yellowPhong, shinyness, reflection)
 
-        cube = Surfaces(frontCube, leftCube, bottomCube, backCube, rightCube, topCube)
+        cube = Surfaces(frontCube, leftCube, backCube, rightCube, topCube)
         return cube
 
     def _initAllSurfaces(self):
