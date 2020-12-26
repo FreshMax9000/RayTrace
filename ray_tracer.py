@@ -22,25 +22,12 @@ class PictureDisplay:
     def draw(self, image: np.ndarray):
         self.ax.cla()
         self.ax.imshow(image, interpolation="antialiased")        
-        plt.pause(1e-10)
-
-    def print(self, image, name=""):
-        if name == "":
-            name = self.name
-        plt.imsave("%s.png"%name, image)
-
+        plt.pause(1e-10)       
 
 
 class RayTracer:
 
     def _init_room(self):
-        """
-        rightWallPlane = Plane(np.array([1.25, -0.75, 0]), np.array([0, 1.5, 0]), np.array([0, 0, -2.5]))
-        leftWallPlane = Plane(np.array([-1.25, -0.75, 0]), np.array([0, 1.5, 0]), np.array([0, 0, -2.5]))
-        bottomWallPlane = Plane(np.array([1.25, -0.75, 0]), np.array([0, 0, -2.5]), np.array([-2.5, 0, 0]))
-        topWallPlane = Plane(np.array([1.25, 0.75, 0]), np.array([-2.5, 0, 0]), np.array([0, 0, -2.5]))
-        backWallPlane = Plane(np.array([1.25, -0.75, -2.5]), np.array([-2.5, 0, 0]), np.array([0, 1.5, 0]))
-        """
         rightWallPlane = Plane(np.array([1.25, -0.75, 1.5]), np.array([0, 1.5, 0]), np.array([0, 0, -14]))
         leftWallPlane = Plane(np.array([-1.25, -0.75, 1.5]), np.array([0, 1.5, 0]), np.array([0, 0, -14]))
         bottomWallPlane = Plane(np.array([1.25, -0.75, 1.5]), np.array([0, 0, -14]), np.array([-2.5, 0, 0]))
@@ -58,7 +45,7 @@ class RayTracer:
         bluePhong = PhongProperties(blueColor, ambientMult, diffuseMult, specularMult)
         whitePhong = PhongProperties(whiteColor, ambientMult, diffuseMult, specularMult)
 
-        shinyness = 1.0
+        shinyness = 2.0
         reflection = 0.0
 
         #left wall red, right wall blue, rest white
@@ -104,8 +91,8 @@ class RayTracer:
         leftCubePlane = Plane(np.array([-0.75, 0.75, -1]), np.array([0, -0.5, 0]), np.array([0, 0, -0.5]))
         bottomCubePlane = Plane(np.array([-0.75, 0.75, -1.5]), np.array([0.5, 0, 0]), np.array([0, 0, -0.5]))
         backCubePlane = Plane(np.array([-0.75, 0.75, -1.5]), np.array([0.4999, 0, 0]), np.array([0, -0.4999, 0]))
-        rightCubePlane = Plane(np.array([-0.25, 0.25, -1.5]), np.array([0, 0, 0.5]), np.array([0, 0.4999, 0]))
-        topCubePlane = Plane(np.array([-0.25, 0.25, -1.5]), np.array([0, 0, 0.5]), np.array([-0.5, 0, 0]))
+        rightCubePlane = Plane(np.array([-0.25, 0.25, -1.5]), np.array([0, 0, 0.5]), np.array([0, 0.5, 0]))
+        topCubePlane = Plane(np.array([-0.2501, 0.25, -1.5]), np.array([0, 0, 0.5]), np.array([-0.5001, 0, 0]))
 
         ambientMult = 0.15
         diffuseMult = 0.2
@@ -137,7 +124,7 @@ class RayTracer:
         return allSurfaces
 
     def _initLightSource(self):
-        supVec = np.array([0.1, -0.74, -1.6])
+        supVec = np.array([0.1, -0.7499999, -1.6])
         dirVec1 = np.array([-0.2, 0, 0])
         dirVec2 = np.array([0, 0, -0.2])
         plane = Plane(supVec, dirVec1, dirVec2)
@@ -145,7 +132,7 @@ class RayTracer:
         lightSource = LightSource(self.allSurfaces, plane, phongProp)
         return lightSource
 
-    def __init__(self, heightpx, widthpx, max_depth=3, randomShadowRays = 4, systematicShadowRayRoot = 2):
+    def __init__(self, heightpx, widthpx, max_depth=3, randomShadowRays = 4, systematicShadowRayRoot = 2, liveDisplay=True):
         self.camera = Camera(heightpx, widthpx)
         self.allSurfaces = self._initAllSurfaces()
         self.lightSource = self._initLightSource()
@@ -153,7 +140,8 @@ class RayTracer:
         self._max_depth = max_depth
         self._rSR = randomShadowRays
         self._sSRR = systematicShadowRayRoot
-        self.picDisplay = PictureDisplay("render")
+        if liveDisplay:
+            self.picDisplay = PictureDisplay("render")
 
     def _getPositiveNormVec(self, normVec, surfPos, origin):
         NormPointOrigVek= origin - (surfPos + normVec)
@@ -201,7 +189,9 @@ class RayTracer:
         self._picturecap[heightPx, widthPx] = np.clip(color, 0, 1)
 
     def display(self):
-        self.picDisplay.draw(self._picturecap)
+        if "picDisplay" in self.__dict__:
+            self.picDisplay.draw(self._picturecap)
 
     def printImage(self, name: str):
-        self.picDisplay.print(self._picturecap, name=name)
+        plt.imsave("%s.png"%name, self._picturecap)
+
