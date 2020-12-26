@@ -38,7 +38,7 @@ class RayTracer:
         whitePhong = PhongProperties(whiteColor, ambientMult, diffuseMult, specularMult)
 
         shinyness = 1.0
-        reflection = 0.03
+        reflection = 0.0
 
         #left wall red, right wall blue, rest white
         rightWall = Surface(leftWallPlane, bluePhong, shinyness, reflection)
@@ -66,7 +66,7 @@ class RayTracer:
         whitePhong = PhongProperties(whiteColor, ambientMult, diffuseMult, specularMult)
 
         shinyness = 2.0
-        reflection = 0.2
+        reflection = 0.25
 
         frontRightCuboid = Surface(frontRightCuboidPlane, whitePhong, shinyness, reflection)
         frontLeftCuboid = Surface(frontLeftCuboidPlane, whitePhong, shinyness, reflection)
@@ -93,7 +93,7 @@ class RayTracer:
         yellowPhong = PhongProperties(yellowColor, ambientMult, diffuseMult, specularMult)
 
         shinyness = 2.0
-        reflection = 0.2
+        reflection = 0.1
 
         frontCube = Surface(frontCubePlane, yellowPhong, shinyness, reflection)
         leftCube = Surface(leftCubePlane, yellowPhong, shinyness, reflection)
