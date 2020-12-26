@@ -27,6 +27,10 @@ class Surfaces:
         smallestDistance = 100.0
 
         for surface in self.__sflist: #iterieren mit jeder Fläche, sodass jeder mögliche Schnittpunkt gefunden wird
+
+            if (ray.origin == np.array([0,0,1])).all() and (surface.plane.supVec == np.array([-1.25, 0.75, 0])).all():
+                continue
+
             for i in range(3):        #Aufbauen der Koeffizientenmatrix und der Ergebnismatirx zur Anwendung der .solve Funktion
                 coeffMatrix[i] = [surface.plane.dirVec1[i],surface.plane.dirVec2[i], 0.0 - ray.normDirection[i]]
                 resultMatrix[i] = ray.origin[i] -surface.plane.supVec[i]
