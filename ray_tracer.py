@@ -28,8 +28,8 @@ class RayTracer:
         frontWallPlane = Plane(np.array([1.25, -0.75, 11.5]), np.array([-2.5, 0, 0]), np.array([0, 1.5, 0]))
         
         ambientMult = 0.1
-        diffuseMult = 0.2
-        specularMult = 1.0
+        diffuseMult = 0.3
+        specularMult = 0.7
         redColor = np.array([1, 0, 0])
         blueColor = np.array([0, 0, 1])
         whiteColor = np.array([1, 1, 1])
@@ -37,8 +37,8 @@ class RayTracer:
         bluePhong = PhongProperties(blueColor, ambientMult, diffuseMult, specularMult)
         whitePhong = PhongProperties(whiteColor, ambientMult, diffuseMult, specularMult)
 
-        shinyness = 1
-        reflection = 0.1
+        shinyness = 1.0
+        reflection = 0.03
 
         #left wall red, right wall blue, rest white
         rightWall = Surface(leftWallPlane, bluePhong, shinyness, reflection)
@@ -53,7 +53,7 @@ class RayTracer:
 
     def _init_cuboid(self):
         frontRightCuboidPlane = Plane(np.array([0.6, 0.75, -1]), np.array([0, -1, 0]), np.array([0.25, 0, -0.25]))
-        frontLeftCuboidPlane = Plane(np.array([0.6, 0.75, -1]), np.array([0, -1, 0]), np.array([-0.25, 0, -0.25]))
+        frontLeftCuboidPlane = Plane(np.array([0.6, 0.75, -0.9999]), np.array([0, -1, 0]), np.array([-0.25, 0, -0.25]))
         backLeftCuboidPlane = Plane(np.array([0.6, 0.75, -1.5]), np.array([0, -1, 0]), np.array([-0.25, 0, 0.25]))
         backRightCuboidPlane = Plane(np.array([0.6, 0.75, -1.5]), np.array([0, -1, 0]), np.array([0.25, 0, 0.25]))
         #bottomCuboidPlane = Plane(np.array([0.6, -0.75, -0.5]), np.array([0.25, 0, 0.25]), np.array([0.25, 0, -0.25]))
@@ -82,7 +82,7 @@ class RayTracer:
         frontCubePlane = Plane(np.array([-0.75, 0.75, -1]), np.array([0, -0.5, 0]), np.array([0.5, 0, 0]))
         leftCubePlane = Plane(np.array([-0.75, 0.75, -1]), np.array([0, -0.5, 0]), np.array([0, 0, -0.5]))
         bottomCubePlane = Plane(np.array([-0.75, 0.75, -1.5]), np.array([0.5, 0, 0]), np.array([0, 0, -0.5]))
-        backCubePlane = Plane(np.array([-0.25, 0.25, -1.5]), np.array([-0.5, 0, 0]), np.array([0, 0.5, 0]))
+        backCubePlane = Plane(np.array([-0.75, 0.75, -1.5]), np.array([0.4999, 0, 0]), np.array([0, -0.4999, 0]))
         rightCubePlane = Plane(np.array([-0.25, 0.25, -1.5]), np.array([0, 0, 0.5]), np.array([0, 0.5, 0]))
         topCubePlane = Plane(np.array([-0.25, 0.25, -1.5]), np.array([0, 0, 0.5]), np.array([-0.5, 0, 0]))
 
@@ -120,7 +120,7 @@ class RayTracer:
         dirVec1 = np.array([-0.2, 0, 0])
         dirVec2 = np.array([0, 0, -0.2])
         plane = Plane(supVec, dirVec1, dirVec2)
-        phongProp = PhongProperties(np.array([1, 1, 1]), 1, 1, 0.7)
+        phongProp = PhongProperties(np.array([1, 1, 1]), 1, 1, 0.6)
         lightSource = LightSource(self.allSurfaces, plane, phongProp)
         return lightSource
 
@@ -162,20 +162,11 @@ class RayTracer:
             illumination = np.zeros((3))
             #calculate shaded part
             shadedPart = float(self.lightSource.checkIfShadowed(surfShiftPos, randomShadowRayCount=self._rSR, systematicShadowRayCountRoot=self._sSRR))
-            #shadedPart = 0.0
-            #illumination += collisionSurf.phong.ambient * self.lightSource.getAmbient()
+            illumination += collisionSurf.phong.ambient * self.lightSource.getAmbient()
             if shadedPart != 1:
-                """
-                illumination += collisionSurf.phong.diffuse * self.lightSource.getDiffuse(surfNorm, surfPos)
-                
-                illumination += collisionSurf.phong.specular * self.lightSource.getSpecular(surfNorm, surfPos,
-                    self.camera.cameraCords, collisionSurf.shinyness)
-                """
-                if widthPx == 78 and heightPx == 17:
-                    print("yahoo!")
                 lightDiffuse, lightSpecular = self.lightSource.getIllumination(surfNorm, surfPos,
                     self.camera.cameraCords, collisionSurf.shinyness)
-                #illumination += collisionSurf.phong.diffuse * lightDiffuse
+                illumination += collisionSurf.phong.diffuse * lightDiffuse
                 
                 illumination += collisionSurf.phong.specular * lightSpecular
                 

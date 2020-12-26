@@ -5,8 +5,8 @@ from timestopper import TimeStopper
 if __name__ == "__main__":
     timerkek = TimeStopper()
 
-    lines = 90
-    ratio = 16/9    
+    lines = 300
+    ratio = 4/3    
     height = int(lines)
     width = int(lines * ratio)
     rayTracer = RayTracer(height, width, max_depth=1, randomShadowRays=0, systematicShadowRayRoot=0)
