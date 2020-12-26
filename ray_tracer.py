@@ -10,6 +10,27 @@ from plane import Plane
 from phong_properties import PhongProperties
 
 
+class PictureDisplay:
+
+    def __init__(self, name: str):
+        self.name = name
+        fig, ax = plt.subplots(figsize=(4.0, 3.0))
+        self.fig = fig
+        self.ax = ax
+        self.ax.set_title(name)
+
+    def draw(self, image: np.ndarray):
+        self.ax.cla()
+        self.ax.imshow(image, interpolation="antialiased")        
+        plt.pause(1e-10)
+
+    def print(self, image, name=""):
+        if name == "":
+            name = self.name
+        plt.imsave("%s.png"%name, image)
+
+
+
 class RayTracer:
 
     def _init_room(self):
@@ -83,7 +104,7 @@ class RayTracer:
         leftCubePlane = Plane(np.array([-0.75, 0.75, -1]), np.array([0, -0.5, 0]), np.array([0, 0, -0.5]))
         bottomCubePlane = Plane(np.array([-0.75, 0.75, -1.5]), np.array([0.5, 0, 0]), np.array([0, 0, -0.5]))
         backCubePlane = Plane(np.array([-0.75, 0.75, -1.5]), np.array([0.4999, 0, 0]), np.array([0, -0.4999, 0]))
-        rightCubePlane = Plane(np.array([-0.25, 0.25, -1.5]), np.array([0, 0, 0.5]), np.array([0, 0.5, 0]))
+        rightCubePlane = Plane(np.array([-0.25, 0.25, -1.5]), np.array([0, 0, 0.5]), np.array([0, 0.4999, 0]))
         topCubePlane = Plane(np.array([-0.25, 0.25, -1.5]), np.array([0, 0, 0.5]), np.array([-0.5, 0, 0]))
 
         ambientMult = 0.15
@@ -132,6 +153,7 @@ class RayTracer:
         self._max_depth = max_depth
         self._rSR = randomShadowRays
         self._sSRR = systematicShadowRayRoot
+        self.picDisplay = PictureDisplay("render")
 
     def _getPositiveNormVec(self, normVec, surfPos, origin):
         NormPointOrigVek= origin - (surfPos + normVec)
@@ -178,8 +200,8 @@ class RayTracer:
             ray.reflect(surfNorm, surfShiftPos)
         self._picturecap[heightPx, widthPx] = np.clip(color, 0, 1)
 
-
-
+    def display(self):
+        self.picDisplay.draw(self._picturecap)
 
     def printImage(self, name: str):
-        plt.imsave("%s.png"%name, self._picturecap)
+        self.picDisplay.print(self._picturecap, name=name)
