@@ -9,13 +9,6 @@ class TimeStopper:
         self.minutes = 0
         self.seconds = 0
 
-    """
-    @property
-    def startTime(self):
-        
-        return self._startTime
-    """
-
     def getPassedTimeString(self, run, absoluteruns):
         timeForLatestCalc = time.time()- self._lastTimeCapture
         self._lastTimeCapture = time.time()
