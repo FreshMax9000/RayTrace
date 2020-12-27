@@ -14,20 +14,8 @@ class Surface:
         self.plane = plane
         self.phong = phongProp
 
-        self._shinyness = shinyness
-        self._reflection = reflection
-
-    @property
-    def shinyness(self):
-        """Getter for shinyness
-        """
-        return self._shinyness    
-            
-    @property
-    def reflection(self):
-        """Getter for reflection
-        """
-        return self._reflection
+        self.shinyness = shinyness
+        self.reflection = reflection
 
     @property
     def norm(self):
