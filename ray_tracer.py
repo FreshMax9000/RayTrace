@@ -25,7 +25,7 @@ class RayTracer:
         #bottomWallPlane = Plane(np.array([1.25, -0.75, 1.5]), np.array([0, 0, -14]), np.array([-2.5, 0, 0]))
         #topWallPlane = Plane(np.array([1.25, 0.75, 1.5]), np.array([-2.5, 0, 0]), np.array([0, 0, -14]))
         #backWallPlane = Plane(np.array([1.25, -0.75, -2.5]), np.array([-2.5, 0, 0]), np.array([0, 1.5, 0]))
-        #frontWallPlane = Plane(np.array([1.25, -0.75, 2.5]), np.array([-2.5, 0, 0]), np.array([0, 1.5, 0]))
+        frontWallPlane = Plane(np.array([-1.25, 0.75, 0]), np.array([2.5, 0, 0]), np.array([0, -1.5, 0]))
         
         ambientMult = 0.1
         diffuseMult = 0.3
@@ -46,9 +46,9 @@ class RayTracer:
         bottomWall = Surface(bottomWallPlane, whitePhong, shinyness, reflection)
         topWall = Surface(topWallPlane, whitePhong, shinyness, reflection)
         backWall = Surface(backWallPlane, whitePhong, shinyness, reflection)
-        #frontWall = Surface(frontWallPlane, whitePhong, shinyness, 0.0)
+        frontWall = Surface(frontWallPlane, whitePhong, shinyness, reflection)
 
-        room = Surfaces(leftWall, rightWall, bottomWall, topWall, backWall)
+        room = Surfaces(frontWall,leftWall, rightWall, bottomWall, topWall, backWall)
         return room
 
     def _init_cuboid(self):
