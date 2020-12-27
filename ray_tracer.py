@@ -29,18 +29,12 @@ class RayTracer:
 
     def _init_room(self):
         
-        rightWallPlane = Plane(np.array([1.25, -0.75, 0]), np.array([0, 1.5, 0]), np.array([0, 0, -2.5]))
-        leftWallPlane = Plane(np.array([-1.25, -0.75, 0]), np.array([0, 1.5, 0]), np.array([0, 0, -2.5]))
-        bottomWallPlane = Plane(np.array([1.25, -0.75, 0]), np.array([0, 0, -2.5]), np.array([-2.5, 0, 0]))
-        topWallPlane = Plane(np.array([1.25, 0.75, 0]), np.array([-2.5, 0, 0]), np.array([0, 0, -2.5]))
+        rightWallPlane = Plane(np.array([1.25, -0.75, 1.25]), np.array([0, 1.5, 0]), np.array([0, 0, -3.75]))
+        leftWallPlane = Plane(np.array([-1.25, -0.75, 1.25]), np.array([0, 1.5, 0]), np.array([0, 0, -3.75]))
+        bottomWallPlane = Plane(np.array([1.25, -0.75, 1.25]), np.array([0, 0, -2.5]), np.array([-2.5, 0, -1.25]))
+        topWallPlane = Plane(np.array([1.25, 0.75, 1.25]), np.array([-2.5, 0, 0]), np.array([0, 0, -3.75]))
         backWallPlane = Plane(np.array([1.25, -0.75, -2.5]), np.array([-2.5, 0, 0]), np.array([0, 1.5, 0]))
-        
-        #rightWallPlane = Plane(np.array([1.25, -0.75, 1.5]), np.array([0, 1.5, 0]), np.array([0, 0, -14]))
-        #leftWallPlane = Plane(np.array([-1.25, -0.75, 1.5]), np.array([0, 1.5, 0]), np.array([0, 0, -14]))
-        #bottomWallPlane = Plane(np.array([1.25, -0.75, 1.5]), np.array([0, 0, -14]), np.array([-2.5, 0, 0]))
-        #topWallPlane = Plane(np.array([1.25, 0.75, 1.5]), np.array([-2.5, 0, 0]), np.array([0, 0, -14]))
-        #backWallPlane = Plane(np.array([1.25, -0.75, -2.5]), np.array([-2.5, 0, 0]), np.array([0, 1.5, 0]))
-        frontWallPlane = Plane(np.array([-1.25, 0.75, 0]), np.array([2.5, 0, 0]), np.array([0, -1.5, 0]))
+        frontWallPlane = Plane(np.array([-1.25, 0.75, 1.25]), np.array([2.5, 0, 0]), np.array([0, -1.5, 0]))
 
         
         ambientMult = 0.1
