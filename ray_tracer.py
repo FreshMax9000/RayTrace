@@ -160,7 +160,7 @@ class RayTracer:
         ray = self.camera.calculateRay(widthPx, heightPx)
         color = np.zeros((3))
         reflection = 1
-        for i in range(self._max_depth):
+        for _ in range(self._max_depth):
             collisionSurf, minDistance = self.allSurfaces.getCollisionObject(ray)
             if collisionSurf is None:
                 break
