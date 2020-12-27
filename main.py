@@ -16,7 +16,7 @@ def calcLine(height_px, width, rayTracer, timerkek):
 if __name__ == "__main__":
     
 
-    lines = 90
+    lines = 480
     ratio = 16/9   
     height = int(lines)
     width = int(lines * ratio)
@@ -29,13 +29,13 @@ if __name__ == "__main__":
     argList = list(range(height))
     argList = [(line, width, rayTracer, timerkek) for line in argList]
     #[width] * height, [rayTracer] * height, [timerkek] * height
-    with Pool(5) as p:
+    with Pool(7) as p:
         rayTracer._picturecap = np.array(list(p.starmap(calcLine, argList)))
 
     print("%d / %d . %s"%(height, height,timerkek.getPassedTimeString(height,height)))
         
         
-    rayTracer.printImage("images/test_imagemulti")
+    rayTracer.printImage("images/test_imagemultitest480sr2")
     print("---Finished---")
     plt.show()
     #print("The render took %fs\n"%(time.time() - startTime))
