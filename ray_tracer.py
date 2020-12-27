@@ -174,15 +174,13 @@ class RayTracer:
             illumination = np.zeros((3))
             #calculate shaded part
             shadedPart = float(self.lightSource.checkIfShadowed(surfShiftPos, randomShadowRayCount=self._rSR, systematicShadowRayCountRoot=self._sSRR))
+            shadedPart *= 0.9
             illumination += collisionSurf.phong.ambient * self.lightSource.getAmbient()
-            if shadedPart != 1:
-                lightDiffuse, lightSpecular = self.lightSource.getIllumination(surfNorm, surfPos,
-                    self.camera.cameraCords, collisionSurf.shinyness)
-                sIllumination = np.zeros(3)
-                sIllumination += collisionSurf.phong.diffuse * lightDiffuse                
-                sIllumination += collisionSurf.phong.specular * lightSpecular                
-                sIllumination *= (1 - shadedPart)
-                illumination += sIllumination
+            lightDiffuse, lightSpecular = self.lightSource.getIllumination(surfNorm, surfPos,
+                self.camera.cameraCords, collisionSurf.shinyness)
+            illumination += collisionSurf.phong.diffuse * lightDiffuse                
+            illumination += collisionSurf.phong.specular * lightSpecular                
+            illumination *= (1 - shadedPart)
             color += reflection * illumination
             reflection *= collisionSurf.reflection
             if reflection == 0:
