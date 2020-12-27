@@ -20,7 +20,7 @@ class TimeStopper:
         if self.minutes >= 60:
             self.minutes -= 60
             self.hours += 1
-        returnString += "\nAbsolute Time: %d h %d m and %d s."%(self.hours,self.minutes,self.seconds)
+        returnString += "\nAbsolute Time: %d h %d m and %.3f s."%(self.hours,self.minutes,self.seconds)
         estimatedseconds = (time.time()-self._startTime)*(absoluteruns/(run+1))
         returnString += "\nEstimated Absolutetime: %d m and %d s."%(estimatedseconds//60,estimatedseconds-(estimatedseconds//60)*60)
         return returnString

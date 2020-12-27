@@ -21,6 +21,10 @@ class LightSource:
     def _generate_aim(self, aimX: float, aimY: float):
         return self._plane.supVec + aimX * self._plane.dirVec1 + aimY * self._plane.dirVec2
 
+    def _generateRayDistanceArrayLine(self, aimXY, sourcePos):
+        aim = self._plane.supVec + aimXY[0] * self._plane.dirVec1 + aimXY[1] * self._plane.dirVec2
+        return np.array([Ray(sourcePos, aim - sourcePos), np.linalg.norm(aim - sourcePos)])
+
     def _generateShadowRay(self, aim, sourcePos):
         return Ray(sourcePos, aim - sourcePos), np.linalg.norm(aim - sourcePos)
 
@@ -30,13 +34,17 @@ class LightSource:
 
     def _generateSystematicShadowRayList(self, sourcePos, systematicShadowRayCountRoot):
         x = np.linspace(0, 1, systematicShadowRayCountRoot)
-        aimCords = list(np.array(np.meshgrid(x, x)).T.reshape(-1, 2)) #list might be slow
-        rayDistanceList = []
-        for aimCord in aimCords:
-            rayDistanceList.append(self._generateShadowRay(self._generate_aim(aimCord[0], aimCord[1]), sourcePos))
+        aimCords = np.array(np.meshgrid(x, x)).T.reshape(-1, 2)
+        
+        rayDistanceList = list(map(self._generateRayDistanceArrayLine, aimCords, [sourcePos]*(systematicShadowRayCountRoot**2)))
+        
         return rayDistanceList
 
-    #def _
+    def _getCollision(self, rayDistance: tuple):
+        return self._surfaces.getCollisionObject(rayDistance[0])
+
+    def _getDistance(self, rayDistance: tuple):
+        return rayDistance[1]
 
     def checkIfShadowed(self, position: np.ndarray, randomShadowRayCount = 64,
         systematicShadowRayCountRoot = 8):
@@ -67,12 +75,19 @@ class LightSource:
             shadowRayDistanceList.extend(self._generateSystematicShadowRayList(position,
                 systematicShadowRayCountRoot))
             #check how many shadow rays hit an object
+            """
             blockedRays = 0
             for rayDistance in shadowRayDistanceList:
                 _, closestDistance = self._surfaces.getCollisionObject(rayDistance[0])
                 if closestDistance < rayDistance[1]:
                     blockedRays += 1
-            return float(blockedRays) / (randomShadowRayCount + systematicShadowRayCountRoot ** 2)
+            """
+            surfDistArray = np.array(list(map(self._getCollision, shadowRayDistanceList)))
+            rayDistArray = np.array(shadowRayDistanceList)
+            #test = surfDistArray[:, 1]
+            truthArray = np.array(surfDistArray[:, 1] < rayDistArray[:, 1])
+            return np.array(np.sum(truthArray)) / (randomShadowRayCount + systematicShadowRayCountRoot ** 2)
+            #return float(blockedRays) / (randomShadowRayCount + systematicShadowRayCountRoot ** 2)
         else:
             return 0.0
 
