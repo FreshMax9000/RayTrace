@@ -189,6 +189,7 @@ class RayTracer:
                 break
             ray.reflect(surfNorm, surfShiftPos)
         self._picturecap[heightPx, widthPx] = np.clip(color, 0, 1)
+        return np.clip(color, 0, 1)
 
     def display(self):
         if "picDisplay" in self.__dict__:
