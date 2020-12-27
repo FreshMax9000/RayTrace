@@ -61,7 +61,7 @@ class LightSource:
         if randomShadowRayCount > 0 or systematicShadowRayCountRoot > 0:
             shadowRayDistanceList = []
             #Generate random shadow rays
-            for i in range(randomShadowRayCount):
+            for _ in range(randomShadowRayCount):
                 shadowRayDistanceList.append(self._generateRandomShadowRay(position))
             #Generate systematic shadow rays
             shadowRayDistanceList.extend(self._generateSystematicShadowRayList(position,
