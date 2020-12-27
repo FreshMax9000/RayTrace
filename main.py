@@ -14,6 +14,9 @@ if __name__ == "__main__":
 
     timerkek = TimeStopper()
 
+
+    #rayTracer.traceRays(479, 454)
+    
     for height_px in range(height):
         for width_px in range(width):
             rayTracer.traceRays(height_px, width_px)

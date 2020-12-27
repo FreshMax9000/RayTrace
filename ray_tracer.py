@@ -92,7 +92,7 @@ class RayTracer:
         frontCubePlane = Plane(np.array([-0.75, 0.75, -1]), np.array([0, -0.5, 0]), np.array([0.5, 0, 0]))
         leftCubePlane = Plane(np.array([-0.75, 0.75, -1]), np.array([0, -0.5, 0]), np.array([0, 0, -0.5]))
         #bottomCubePlane = Plane(np.array([-0.75, 0.75, -1.5]), np.array([0.5, 0, 0]), np.array([0, 0, -0.5]))
-        backCubePlane = Plane(np.array([-0.75, 0.75, -1.5]), np.array([0.4999, 0, 0]), np.array([0, -0.4999, 0]))
+        backCubePlane = Plane(np.array([-0.75, 0.75, -1.5]), np.array([0.5, 0, 0]), np.array([0, -0.5, 0]))
         rightCubePlane = Plane(np.array([-0.25, 0.25, -1.5]), np.array([0, 0, 0.5]), np.array([0, 0.5, 0]))
         topCubePlane = Plane(np.array([-0.2501, 0.25, -1.5]), np.array([0, 0, 0.5]), np.array([-0.5001, 0, 0]))
 
