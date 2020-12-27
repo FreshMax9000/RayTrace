@@ -31,7 +31,7 @@ class RayTracer:
         
         rightWallPlane = Plane(np.array([1.25, -0.75, 1.25]), np.array([0, 1.5, 0]), np.array([0, 0, -3.75]))
         leftWallPlane = Plane(np.array([-1.25, -0.75, 1.25]), np.array([0, 1.5, 0]), np.array([0, 0, -3.75]))
-        bottomWallPlane = Plane(np.array([1.25, -0.75, 1.25]), np.array([0, 0, -2.5]), np.array([-2.5, 0, -1.25]))
+        bottomWallPlane = Plane(np.array([1.25, -0.75, 1.25]), np.array([0, 0, -3.75]), np.array([-2.5, 0, -1.25]))
         topWallPlane = Plane(np.array([1.25, 0.75, 1.25]), np.array([-2.5, 0, 0]), np.array([0, 0, -3.75]))
         backWallPlane = Plane(np.array([1.25, -0.75, -2.5]), np.array([-2.5, 0, 0]), np.array([0, 1.5, 0]))
         frontWallPlane = Plane(np.array([-1.25, 0.75, 1.25]), np.array([2.5, 0, 0]), np.array([0, -1.5, 0]))
