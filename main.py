@@ -6,11 +6,11 @@ from timestopper import TimeStopper
 if __name__ == "__main__":
     
 
-    lines = 80
+    lines = 90
     ratio = 16/9   
     height = int(lines)
     width = int(lines * ratio)
-    rayTracer = RayTracer(height, width, max_depth=3, randomShadowRays=0, systematicShadowRayRoot=0, liveDisplay=False)
+    rayTracer = RayTracer(height, width, max_depth=1, randomShadowRays=0, systematicShadowRayRoot=1, liveDisplay=False)
 
     timerkek = TimeStopper()
 
