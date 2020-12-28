@@ -1,7 +1,6 @@
 from multiprocessing import Pool
 import time
 
-import matplotlib.pyplot as plt
 import numpy as np
 
 from ray_tracer import RayTracer
@@ -16,28 +15,17 @@ def calcLine(height_px, width, rayTracer):
 if __name__ == "__main__":
     
 
-    lines = 480
+    lines = 90
     ratio = 16/9   
     height = int(lines)
     width = int(lines * ratio)
-    rayTracer = RayTracer(height, width, max_depth=4, randomShadowRays=0, systematicShadowRayRoot=2, liveDisplay=False)
+    rayTracer = RayTracer(height, width, max_depth=4, randomShadowRays=0, systematicShadowRayRoot=2)
 
-    #timerkek = TimeStopper()
-
-    
-
-    #rayTracer.traceRays(479, 454)
-    argList = list(range(height))
-    argList = [(line, width, rayTracer) for line in argList]
-    #[width] * height, [rayTracer] * height, [timerkek] * height
     timeStart = time.time()
-    with Pool(4) as p:
-        rayTracer._picturecap = np.array(list(p.starmap(calcLine, argList)))
 
+    rayTracer.renderPicture()
         
         
-    rayTracer.printImage("W4multitest480sr2")
+    rayTracer.printImage("multiTest")
     print("---Finished---")
     print("It took %.3fs"%(time.time() - timeStart))
-    plt.show()
-    #print("The render took %fs\n"%(time.time() - startTime))

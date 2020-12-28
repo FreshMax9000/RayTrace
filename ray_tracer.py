@@ -1,3 +1,5 @@
+from multiprocessing import Pool
+
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -8,21 +10,6 @@ from ray import Ray
 from light_source import LightSource
 from plane import Plane
 from phong_properties import PhongProperties
-
-
-class PictureDisplay:
-
-    def __init__(self, name: str):
-        self.name = name
-        fig, ax = plt.subplots(figsize=(4.0, 3.0))
-        self.fig = fig
-        self.ax = ax
-        self.ax.set_title(name)
-
-    def draw(self, image: np.ndarray):
-        self.ax.cla()
-        self.ax.imshow(image, interpolation="antialiased")        
-        plt.pause(1e-10)       
 
 
 class RayTracer:
@@ -134,7 +121,7 @@ class RayTracer:
         lightSource = LightSource(self.allSurfaces, plane, phongProp)
         return lightSource
 
-    def __init__(self, heightpx, widthpx, max_depth=3, randomShadowRays = 4, systematicShadowRayRoot = 2, liveDisplay=True):
+    def __init__(self, heightpx, widthpx, max_depth=3, randomShadowRays = 4, systematicShadowRayRoot = 2, processCount=None):
         self.camera = Camera(heightpx, widthpx)
         self.allSurfaces = self._initAllSurfaces()
         self.lightSource = self._initLightSource()
@@ -142,8 +129,8 @@ class RayTracer:
         self._max_depth = max_depth
         self._rSR = randomShadowRays
         self._sSRR = systematicShadowRayRoot
-        if liveDisplay:
-            self.picDisplay = PictureDisplay("render")
+        self._processCount = processCount
+
 
     def _getPositiveNormVec(self, normVec, surfPos, origin):
         NormPointOrigVek= origin - (surfPos + normVec)
@@ -189,9 +176,15 @@ class RayTracer:
         self._picturecap[heightPx, widthPx] = np.clip(color, 0, 1)
         return np.clip(color, 0, 1)
 
-    def display(self):
-        if "picDisplay" in self.__dict__:
-            self.picDisplay.draw(self._picturecap)
+    def renderLine(self, height_px):
+        return np.array(list(map(self.traceRays, [height_px]*self.camera.widthpx, list(range(self.camera.widthpx)))))
+
+    def renderPicture(self):
+        heightPxs = list(range(self.camera.heightpx))
+        with Pool(self._processCount) as p:
+            self._picturecap = np.array(list(p.map(self.renderLine, heightPxs)))
+            p.close()
+            p.terminate()
 
     def printImage(self, name: str):
         plt.imsave("%s.png"%name, self._picturecap)
