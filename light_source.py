@@ -113,7 +113,7 @@ class LightSource:
     def getIllumination(self, surfNormV: np.ndarray, pos: np.ndarray, cameraPos: np.ndarray,
         shinyness: float):
         #diffuse
-        lightDir = Ray.normalizeVector(self.getClosestPointOfLight(Ray(pos, self._middle - pos)) - pos)
+        lightDir = Ray.normalizeVector(self.getClosestPointOfLight(Ray(pos, surfNormV)) - pos)
         diffuse = self._phong.diffuse * np.dot(lightDir, surfNormV)
         #specular
         vectorFromCam = pos - cameraPos
