@@ -15,53 +15,49 @@ class Surfaces:
         
         return self.__sflist
 
-    #def getCollisionObject(self, ray):
+    def checkSingleObject(self, surface, ray):
+        coeffMatrix = np.transpose([surface.plane.dirVec1,surface.plane.dirVec2, np.zeros(3) - ray.normDirection])
+        resultMatrix = ray.origin - surface.plane.supVec
+        try:                      #Gleichungssystem wird versucht zu lösem
+            varMatrix = np.linalg.solve(coeffMatrix,resultMatrix)
+        except:                   #Wenn nicht lösbar --> kein Schnittpunkt bzw. parrallel, nächste Fläche wird geprüft -->break
+            return None, np.inf
         
+        if varMatrix[0] >= -1.0e-8 and varMatrix[0] < 0.0:
+            varMatrix[0] = 0.0
+        if varMatrix[1] >= -1.0e-8 and varMatrix[1] < 0.0:
+            varMatrix[1] = 0.0
+
+        if varMatrix[0] > 1 or varMatrix[0] < 0 or varMatrix[1] > 1 or varMatrix[1] < 0 or varMatrix[2] <= 0:
+            return None, np.inf
+        return np.array([surface, varMatrix[2]])
+        """
+        if varMatrix[2] < smallestDistance:
+            smallestDistance = varMatrix[2]
+            associatedSurface = surface
+            associatedVarMatrix = varMatrix
+        elif varMatrix[2] == smallestDistance:
+            
+            if self.checkIfNewSurfCloser(self.getNearPoint(associatedVarMatrix,associatedSurface),self.getNearPoint(varMatrix,surface), ray.origin):
+                smallestDistance = varMatrix[2]
+                associatedSurface = surface
+                associatedVarMatrix = varMatrix
+        """
 
     def getCollisionObject(self, ray):
         #Initialiesieren der Matrixen für die  linalg.solve Funktion
         #Werden initialiesiert, sodass sie in for-Schleife Stück für Stück gesetzt werden können
         #Alle mit float, da sobald ein Wert in array --> alle float, generell keine häufigen Speicherzuweisungen durch diesen Stil
-        coeffMatrix = np.array([[0.0,0.0,0.0],[0.0,0.0,0.0],[0.0,0.0,0.0]]) 
-        resultMatrix = np.array([0.0,0.0,0.0])
-        smallestDistance = 100.0
-
-        for surface in self.__sflist: #iterieren mit jeder Fläche, sodass jeder mögliche Schnittpunkt gefunden wird
-            """
-            if ray.origin[2] == 1 and surface.plane.supVec[0] == - 1.25 and surface.plane.supVec[1] == 0.75 and surface.plane.supVec[2] == 0:
-                continue
-            """
-            for i in range(3):        #Aufbauen der Koeffizientenmatrix und der Ergebnismatirx zur Anwendung der .solve Funktion
-                coeffMatrix[i] = [surface.plane.dirVec1[i],surface.plane.dirVec2[i], 0.0 - ray.normDirection[i]]
-                resultMatrix[i] = ray.origin[i] -surface.plane.supVec[i]
-            try:                      #Gleichungssystem wird versucht zu lösem
-                varMatrix = np.linalg.solve(coeffMatrix,resultMatrix)
-            except:                   #Wenn nicht lösbar --> kein Schnittpunkt bzw. parrallel, nächste Fläche wird geprüft -->break
-                continue
+        
+        #smallestDistance = np.inf
+        #associatedSurface = None
+        surfaceDistanceArray = np.array(list(map(self.checkSingleObject, self.__sflist, [ray]*len(self.__sflist))))
             
-            if varMatrix[0] >= -1.0e-8 and varMatrix[0] < 0.0:
-                varMatrix[0] = 0.0
-            if varMatrix[1] >= -1.0e-8 and varMatrix[1] < 0.0:
-                varMatrix[1] = 0.0
-
-            if varMatrix[0] > 1 or varMatrix[0] < 0 or varMatrix[1] > 1 or varMatrix[1] < 0 or varMatrix[2] <= 0:
-                continue
-            
-            if varMatrix[2] < smallestDistance:
-                smallestDistance = varMatrix[2]
-                associatedSurface = surface
-                associatedVarMatrix = varMatrix
-            elif varMatrix[2] == smallestDistance:
-                
-                if self.checkIfNewSurfCloser(self.getNearPoint(associatedVarMatrix,associatedSurface),self.getNearPoint(varMatrix,surface), ray.origin):
-                    smallestDistance = varMatrix[2]
-                    associatedSurface = surface
-                    associatedVarMatrix = varMatrix
-            
-        if smallestDistance != 100.0:
-            return (associatedSurface, smallestDistance)
-        else:
-            return (None, smallestDistance)
+        minVal = surfaceDistanceArray.min(where=[False, True], initial = np.inf) 
+        minimums = np.where(surfaceDistanceArray[:, 1] == minVal)
+        r_val = surfaceDistanceArray[minimums[0]][0]
+        return r_val
+        #return (associatedSurface, smallestDistance)
 
     def getNearPoint(self,varMatrix, surface):
         if varMatrix[0] == 0:
