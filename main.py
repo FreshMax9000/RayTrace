@@ -4,13 +4,7 @@ import time
 import numpy as np
 
 from ray_tracer import RayTracer
-from timestopper import TimeStopper
 
-
-def calcLine(height_px, width, rayTracer):
-    rayTracer._picturecap[height_px] = np.array(list(map(rayTracer.traceRays, [height_px]*width, list(range(width)))))
-    print("%d / %d"%(height_px, height))
-    return rayTracer._picturecap[height_px]
 
 if __name__ == "__main__":
     
