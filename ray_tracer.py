@@ -51,12 +51,12 @@ class RayTracer:
         reflection = 0.0
 
         #left wall red, right wall blue, rest white
-        rightWall = Surface(leftWallPlane, bluePhong, shinyness, reflection)
-        leftWall = Surface(rightWallPlane, redPhong, shinyness, reflection)
-        bottomWall = Surface(bottomWallPlane, whitePhong, shinyness, reflection)
-        topWall = Surface(topWallPlane, whitePhong, shinyness, reflection)
-        backWall = Surface(backWallPlane, whitePhong, shinyness, reflection)
-        frontWall = Surface(frontWallPlane, whitePhong, shinyness, reflection)
+        rightWall = Surface("rightWall",leftWallPlane, bluePhong, shinyness, reflection)
+        leftWall = Surface("leftWall",rightWallPlane, redPhong, shinyness, reflection)
+        bottomWall = Surface("bottomWall",bottomWallPlane, whitePhong, shinyness, reflection)
+        topWall = Surface("topWall",topWallPlane, whitePhong, shinyness, reflection)
+        backWall = Surface("backWall",backWallPlane, whitePhong, shinyness, reflection)
+        frontWall = Surface("frontWall",frontWallPlane, whitePhong, shinyness, reflection)
 
         room = Surfaces(frontWall,leftWall, rightWall, bottomWall, topWall, backWall)
         return room
@@ -78,12 +78,12 @@ class RayTracer:
         shinyness = 2.0
         reflection = 0.25
 
-        frontRightCuboid = Surface(frontRightCuboidPlane, whitePhong, shinyness, reflection)
-        frontLeftCuboid = Surface(frontLeftCuboidPlane, whitePhong, shinyness, reflection)
-        backLeftCuboid = Surface(backLeftCuboidPlane, whitePhong, shinyness, reflection)
-        backRightCuboid = Surface(backRightCuboidPlane, whitePhong, shinyness, reflection)
-        #bottomCuboid = Surface(bottomCuboidPlane, whitePhong, shinyness, reflection)
-        topCuboid = Surface(topCuboidPlane, whitePhong, shinyness, reflection)
+        frontRightCuboid = Surface("frontRightCuboid",frontRightCuboidPlane, whitePhong, shinyness, reflection)
+        frontLeftCuboid = Surface("frontLeftCuboid",frontLeftCuboidPlane, whitePhong, shinyness, reflection)
+        backLeftCuboid = Surface("backLeftCuboid",backLeftCuboidPlane, whitePhong, shinyness, reflection)
+        backRightCuboid = Surface("backRightCuboid",backRightCuboidPlane, whitePhong, shinyness, reflection)
+        #bottomCuboid = Surface("bottomCuboid",bottomCuboidPlane, whitePhong, shinyness, reflection)
+        topCuboid = Surface("topCuboid",topCuboidPlane, whitePhong, shinyness, reflection)
 
         cuboid = Surfaces(frontRightCuboid, frontLeftCuboid, backLeftCuboid, backRightCuboid, topCuboid)
         return cuboid
@@ -105,12 +105,12 @@ class RayTracer:
         shinyness = 2.0
         reflection = 0.1
 
-        frontCube = Surface(frontCubePlane, yellowPhong, shinyness, reflection)
-        leftCube = Surface(leftCubePlane, yellowPhong, shinyness, reflection)
-        #bottomCube = Surface(bottomCubePlane, yellowPhong, shinyness, reflection)
-        backCube = Surface(backCubePlane, yellowPhong, shinyness, reflection)
-        rightCube = Surface(rightCubePlane, yellowPhong, shinyness, reflection)
-        topCube = Surface(topCubePlane, yellowPhong, shinyness, reflection)
+        frontCube = Surface("frontCube",frontCubePlane, yellowPhong, shinyness, reflection)
+        leftCube = Surface("leftCube",leftCubePlane, yellowPhong, shinyness, reflection)
+        #bottomCube = Surface("bottomCube",bottomCubePlane, yellowPhong, shinyness, reflection)
+        backCube = Surface("backCube",backCubePlane, yellowPhong, shinyness, reflection)
+        rightCube = Surface("rightCube",rightCubePlane, yellowPhong, shinyness, reflection)
+        topCube = Surface("topCube",topCubePlane, yellowPhong, shinyness, reflection)
 
         cube = Surfaces(frontCube, leftCube, backCube, rightCube, topCube)
         return cube
