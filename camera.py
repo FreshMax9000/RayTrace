@@ -8,10 +8,10 @@ class Camera:
         """Constructor method
         """
         self.cameraCords = np.array([0, 0, 1])
-        self._heightpx = heightpx
-        self._widthpx = widthpx
+        self.heightpx = heightpx
+        self.widthpx = widthpx
         self.ratio = float(widthpx) / heightpx
-        self._screen = Screen(-1/self.ratio, 1/self.ratio, -1, 1)
+        self.screen = Screen(-1/self.ratio, 1/self.ratio, -1, 1)
 
     def calculateRay(self, x: int, y: int):
         pixel_x_pos = x * 2 / self._widthpx + self._screen.left
