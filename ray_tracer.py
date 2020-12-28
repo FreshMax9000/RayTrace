@@ -69,7 +69,7 @@ class RayTracer:
         #bottomCuboidPlane = Plane(np.array([0.6, -0.75, -0.5]), np.array([0.25, 0, 0.25]), np.array([0.25, 0, -0.25]))
         topCuboidPlane = Plane(np.array([0.6, -0.25, -1]), np.array([-0.25, 0, -0.25]), np.array([0.25, 0, -0.25]))
 
-        ambientMult = 0.15
+        ambientMult = 0.1
         diffuseMult = 0.2
         specularMult = 1.0
         whiteColor = np.array([1, 1, 1])
@@ -96,7 +96,7 @@ class RayTracer:
         rightCubePlane = Plane(np.array([-0.25, 0.25, -1.5]), np.array([0, 0, 0.5]), np.array([0, 0.5, 0]))
         topCubePlane = Plane(np.array([-0.2501, 0.25, -1.5]), np.array([0, 0, 0.5]), np.array([-0.5001, 0, 0]))
 
-        ambientMult = 0.15
+        ambientMult = 0.1
         diffuseMult = 0.2
         specularMult = 1.0
         yellowColor = np.array([1, 1, 0])
@@ -130,7 +130,7 @@ class RayTracer:
         dirVec1 = np.array([-0.2, 0, 0])
         dirVec2 = np.array([0, 0, -0.2])
         plane = Plane(supVec, dirVec1, dirVec2)
-        phongProp = PhongProperties(np.array([1, 1, 1]), 1, 1, 0.6)
+        phongProp = PhongProperties(np.array([1.0, 1.0, 0.6]), 1, 1, 0.6)
         lightSource = LightSource(self.allSurfaces, plane, phongProp)
         return lightSource
 
@@ -174,16 +174,14 @@ class RayTracer:
             illumination = np.zeros((3))
             #calculate shaded part
             shadedPart = float(self.lightSource.checkIfShadowed(surfShiftPos, randomShadowRayCount=self._rSR, systematicShadowRayCountRoot=self._sSRR))
+            shadedPart *= 0.9
             illumination += collisionSurf.phong.ambient * self.lightSource.getAmbient()
-            if shadedPart != 1:
-                lightDiffuse, lightSpecular = self.lightSource.getIllumination(surfNorm, surfPos,
-                    self.camera.cameraCords, collisionSurf.shinyness)
-                illumination += collisionSurf.phong.diffuse * lightDiffuse
-                
-                illumination += collisionSurf.phong.specular * lightSpecular
-                
-                illumination *= (1 - shadedPart)
-                color += reflection * illumination
+            lightDiffuse, lightSpecular = self.lightSource.getIllumination(surfNorm, surfPos,
+                self.camera.cameraCords, collisionSurf.shinyness)
+            illumination += collisionSurf.phong.diffuse * lightDiffuse                
+            illumination += collisionSurf.phong.specular * lightSpecular                
+            illumination *= (1 - shadedPart)
+            color += reflection * illumination
             reflection *= collisionSurf.reflection
             if reflection == 0:
                 break
