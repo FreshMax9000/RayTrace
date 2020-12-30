@@ -13,13 +13,13 @@ if __name__ == "__main__":
     ratio = 16/9   
     height = int(lines)
     width = int(lines * ratio)
-    rayTracer = RayTracer(height, width, max_depth=4, randomShadowRays=0, systematicShadowRayRoot=2)
+    rayTracer = RayTracer(height, width, max_depth=1, randomShadowRays=0, systematicShadowRayRoot=0)
 
     timeStart = time.time()
 
     rayTracer.renderPicture()
         
         
-    rayTracer.printImage("multiTest")
+    rayTracer.printImage("images/test")
     print("---Finished---")
     print("It took %.3fs"%(time.time() - timeStart))
