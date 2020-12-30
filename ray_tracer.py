@@ -4,11 +4,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from camera import Camera
-from surface import Surface
-from surfaces import Surfaces
+from space_objects import SpaceObject
+from space_objects import SpaceObjects
 from ray import Ray
 from light_source import LightSource
-from plane import Plane
+from geometric_objects import Plane
 from phong_properties import PhongProperties
 
 
@@ -38,15 +38,14 @@ class RayTracer:
         reflection = 0.0
 
         #left wall red, right wall blue, rest white
-        rightWall = Surface(leftWallPlane, bluePhong, shinyness, reflection)
-        leftWall = Surface(rightWallPlane, redPhong, shinyness, reflection)
-        bottomWall = Surface(bottomWallPlane, whitePhong, shinyness, reflection)
-        topWall = Surface(topWallPlane, whitePhong, shinyness, reflection)
-        backWall = Surface(backWallPlane, whitePhong, shinyness, reflection)
-        frontWall = Surface(frontWallPlane, whitePhong, shinyness, reflection)
-
-        room = Surfaces(frontWall,leftWall, rightWall, bottomWall, topWall, backWall)
-        return room
+        rightWall = SpaceObject(leftWallPlane, bluePhong, shinyness, reflection)
+        leftWall = SpaceObject(rightWallPlane, redPhong, shinyness, reflection)
+        bottomWall = SpaceObject(bottomWallPlane, whitePhong, shinyness, reflection)
+        topWall = SpaceObject(topWallPlane, whitePhong, shinyness, reflection)
+        backWall = SpaceObject(backWallPlane, whitePhong, shinyness, reflection)
+        frontWall = SpaceObject(frontWallPlane, whitePhong, shinyness, reflection)
+        
+        return [frontWall,leftWall, rightWall, bottomWall, topWall, backWall]
 
     def _init_cuboid(self):
         frontRightCuboidPlane = Plane(np.array([0.6, 0.75, -1]), np.array([0, -1, 0]), np.array([0.25, 0, -0.25]))
@@ -65,15 +64,14 @@ class RayTracer:
         shinyness = 2.0
         reflection = 0.25
 
-        frontRightCuboid = Surface(frontRightCuboidPlane, whitePhong, shinyness, reflection)
-        frontLeftCuboid = Surface(frontLeftCuboidPlane, whitePhong, shinyness, reflection)
-        backLeftCuboid = Surface(backLeftCuboidPlane, whitePhong, shinyness, reflection)
-        backRightCuboid = Surface(backRightCuboidPlane, whitePhong, shinyness, reflection)
+        frontRightCuboid = SpaceObject(frontRightCuboidPlane, whitePhong, shinyness, reflection)
+        frontLeftCuboid = SpaceObject(frontLeftCuboidPlane, whitePhong, shinyness, reflection)
+        backLeftCuboid = SpaceObject(backLeftCuboidPlane, whitePhong, shinyness, reflection)
+        backRightCuboid = SpaceObject(backRightCuboidPlane, whitePhong, shinyness, reflection)
         #bottomCuboid = Surface(bottomCuboidPlane, whitePhong, shinyness, reflection)
-        topCuboid = Surface(topCuboidPlane, whitePhong, shinyness, reflection)
+        topCuboid = SpaceObject(topCuboidPlane, whitePhong, shinyness, reflection)
 
-        cuboid = Surfaces(frontRightCuboid, frontLeftCuboid, backLeftCuboid, backRightCuboid, topCuboid)
-        return cuboid
+        return [frontRightCuboid, frontLeftCuboid, backLeftCuboid, backRightCuboid, topCuboid]
 
     def _init_cube(self):
         frontCubePlane = Plane(np.array([-0.75, 0.75, -1]), np.array([0, -0.5, 0]), np.array([0.5, 0, 0]))
@@ -92,25 +90,21 @@ class RayTracer:
         shinyness = 2.0
         reflection = 0.1
 
-        frontCube = Surface(frontCubePlane, yellowPhong, shinyness, reflection)
-        leftCube = Surface(leftCubePlane, yellowPhong, shinyness, reflection)
+        frontCube = SpaceObject(frontCubePlane, yellowPhong, shinyness, reflection)
+        leftCube = SpaceObject(leftCubePlane, yellowPhong, shinyness, reflection)
         #bottomCube = Surface(bottomCubePlane, yellowPhong, shinyness, reflection)
-        backCube = Surface(backCubePlane, yellowPhong, shinyness, reflection)
-        rightCube = Surface(rightCubePlane, yellowPhong, shinyness, reflection)
-        topCube = Surface(topCubePlane, yellowPhong, shinyness, reflection)
+        backCube = SpaceObject(backCubePlane, yellowPhong, shinyness, reflection)
+        rightCube = SpaceObject(rightCubePlane, yellowPhong, shinyness, reflection)
+        topCube = SpaceObject(topCubePlane, yellowPhong, shinyness, reflection)
 
-        cube = Surfaces(frontCube, leftCube, backCube, rightCube, topCube)
-        return cube
+        return [frontCube, leftCube, backCube, rightCube, topCube]
 
-    def _initAllSurfaces(self):
-        room = self._init_room()
-        cuboid = self._init_cuboid()
-        cube = self._init_cube()
-        allSurfaceList = room.sflist
-        allSurfaceList.extend(cuboid.sflist)
-        allSurfaceList.extend(cube.sflist)
-        allSurfaces = Surfaces(*allSurfaceList)
-        return allSurfaces
+    def _initAllSpaceObjects(self):
+        allSpaceObjectsList = self._init_room()
+        allSpaceObjectsList.extend(self._init_cuboid())
+        allSpaceObjectsList.extend(self._init_cube())
+        allSpaceObjects = SpaceObjects(allSpaceObjectsList)
+        return allSpaceObjects
 
     def _initLightSource(self):
         supVec = np.array([0.1, -0.7499999, -1.6])
@@ -118,12 +112,12 @@ class RayTracer:
         dirVec2 = np.array([0, 0, -0.2])
         plane = Plane(supVec, dirVec1, dirVec2)
         phongProp = PhongProperties(np.array([1.0, 1.0, 0.6]), 1, 1, 0.6)
-        lightSource = LightSource(self.allSurfaces, plane, phongProp)
+        lightSource = LightSource(self.allSpaceObjects, plane, phongProp)
         return lightSource
 
     def __init__(self, heightpx, widthpx, max_depth=3, randomShadowRays = 4, systematicShadowRayRoot = 2, processCount=None):
         self.camera = Camera(heightpx, widthpx)
-        self.allSurfaces = self._initAllSurfaces()
+        self.allSpaceObjects = self._initAllSpaceObjects()
         self.lightSource = self._initLightSource()
         self._picturecap = np.zeros((heightpx, widthpx, 3))
         self._max_depth = max_depth
@@ -148,13 +142,13 @@ class RayTracer:
         color = np.zeros((3))
         reflection = 1
         for _ in range(self._max_depth):
-            collisionSurf, minDistance = self.allSurfaces.getCollisionObject(ray)
-            if collisionSurf is None:
+            collisionObj, minDistance = self.allSpaceObjects.checkIfCollisionRay(ray)
+            if collisionObj is None:
                 break
             #pos auf der surface
             surfPos = ray.origin + minDistance * ray.normDirection
             #normVek der surface
-            surfNorm = collisionSurf.plane.getPositiveNormVec(ray.origin)
+            surfNorm = collisionObj.norm
             #shiftedPosVek des auftrittspunkt der surface
             surfShiftPos = surfPos + 1e-5 * surfNorm
             #define illumination var
@@ -162,14 +156,14 @@ class RayTracer:
             #calculate shaded part
             shadedPart = float(self.lightSource.checkIfShadowed(surfShiftPos, randomShadowRayCount=self._rSR, systematicShadowRayCountRoot=self._sSRR))
             shadedPart *= 0.9
-            illumination += collisionSurf.phong.ambient * self.lightSource.getAmbient()
+            illumination += collisionObj.phong.ambient * self.lightSource.getAmbient()
             lightDiffuse, lightSpecular = self.lightSource.getIllumination(surfNorm, surfPos,
-                self.camera.cameraCords, collisionSurf.shinyness)
-            illumination += collisionSurf.phong.diffuse * lightDiffuse                
-            illumination += collisionSurf.phong.specular * lightSpecular                
+                self.camera.cameraCords, collisionObj.shinyness)
+            illumination += collisionObj.phong.diffuse * lightDiffuse                
+            illumination += collisionObj.phong.specular * lightSpecular                
             illumination *= (1 - shadedPart)
             color += reflection * illumination
-            reflection *= collisionSurf.reflection
+            reflection *= collisionObj.reflection
             if reflection == 0:
                 break
             ray.reflect(surfNorm, surfShiftPos)
@@ -181,6 +175,7 @@ class RayTracer:
 
     def renderPicture(self):
         heightPxs = list(range(self.camera.heightpx))
+        #self._picturecap = np.array(list(map(self.renderLine, heightPxs)))
         with Pool(self._processCount) as p:
             self._picturecap = np.array(list(p.map(self.renderLine, heightPxs)))
             p.close()

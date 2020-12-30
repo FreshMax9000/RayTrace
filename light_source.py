@@ -1,8 +1,8 @@
 import numpy as np
 
 from ray import Ray
-from surfaces import Surfaces
-from plane import Plane
+from space_objects import SpaceObjects
+from geometric_objects import Plane
 from phong_properties import PhongProperties
 
 
@@ -12,8 +12,8 @@ def vector3d(x: float, y: float, z: float):
 
 class LightSource:
 
-    def __init__(self, surfaces: Surfaces, plane: Plane, phongProp: PhongProperties):
-        self._surfaces = surfaces
+    def __init__(self, spaceObjs: SpaceObjects, plane: Plane, phongProp: PhongProperties):
+        self._spaceObjs = spaceObjs
         self._plane = plane
         self._phong = phongProp
         self._middle = self._plane.supVec + self._plane.dirVec1 / 2 + self._plane.dirVec2 / 2
@@ -41,7 +41,7 @@ class LightSource:
         return rayDistanceList
 
     def _getCollision(self, rayDistance: tuple):
-        return self._surfaces.getCollisionObject(rayDistance[0])
+        return self._spaceObjs.getCollisionObject(rayDistance[0])
 
     def _getDistance(self, rayDistance: tuple):
         return rayDistance[1]

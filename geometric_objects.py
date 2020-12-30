@@ -2,7 +2,17 @@ import numpy as np
 
 from ray import Ray
 
-class Plane:
+
+class GeometricObject:
+
+    def checkCollision(self, ray: Ray):
+        pass
+
+    def getNorm(self):
+        pass
+
+
+class Plane(GeometricObject):
     def __init__(self, supVec: np.array, dirVec1: np.array, dirVec2: np.array):
         """Constructor method
         """
@@ -39,3 +49,23 @@ class Plane:
         closest2d = np.clip(point2d, 0, 1)
         furthest2d = np.array([1, 1]) - closest2d
         return furthest2d.dot(self._trans2dTo3d)
+
+    def checkCollision(self, ray: Ray):
+        coeffMatrix = np.transpose([self.dirVec1,self.dirVec2, np.zeros(3) - ray.normDirection])
+        resultMatrix = ray.origin - self.supVec
+        try:                      #Gleichungssystem wird versucht zu lösem
+            varMatrix = np.linalg.solve(coeffMatrix,resultMatrix)
+        except:                   #Wenn nicht lösbar --> kein Schnittpunkt bzw. parrallel, nächste Fläche wird geprüft -->break
+            return np.inf
+        
+        if varMatrix[0] >= -1.0e-8 and varMatrix[0] < 0.0:
+            varMatrix[0] = 0.0
+        if varMatrix[1] >= -1.0e-8 and varMatrix[1] < 0.0:
+            varMatrix[1] = 0.0
+
+        if varMatrix[0] > 1 or varMatrix[0] < 0 or varMatrix[1] > 1 or varMatrix[1] < 0 or varMatrix[2] <= 0:
+            return np.inf
+        return np.array([varMatrix[2]])
+
+    def getNorm(self):
+        return self.norm
