@@ -4,8 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from camera import Camera
-from space_objects import SpaceObject
-from space_objects import SpaceObjects
+from space_objects import *
 from ray import Ray
 from light_source import LightSource
 from geometric_objects import Plane
@@ -16,8 +15,8 @@ class RayTracer:
 
     def _init_room(self):
         
-        rightWallPlane = Plane(np.array([1.25, -0.75, 1.25]), np.array([0, 1.5, 0]), np.array([0, 0, -3.75]))
-        leftWallPlane = Plane(np.array([-1.25, -0.75, 1.25]), np.array([0, 1.5, 0]), np.array([0, 0, -3.75]))
+        leftWallPlane = Plane(np.array([1.25, -0.75, 1.25]), np.array([0, 1.5, 0]), np.array([0, 0, -3.75]))
+        rightWallPlane = Plane(np.array([-1.25, -0.75, 1.25]), np.array([0, 1.5, 0]), np.array([0, 0, -3.75]))
         topWallPlane = Plane(np.array([1.25, -0.75, 1.25]), np.array([0, 0, -3.75]), np.array([-2.5, 0, 0]))
         bottomWallPlane = Plane(np.array([1.25, 0.75, 1.25]), np.array([-2.5, 0, 0]), np.array([0, 0, -3.75]))
         backWallPlane = Plane(np.array([1.25, -0.75, -2.5]), np.array([-2.5, 0, 0]), np.array([0, 1.5, 0]))
@@ -45,15 +44,15 @@ class RayTracer:
         backWall = SpaceObject(backWallPlane, whitePhong, shinyness, reflection)
         frontWall = SpaceObject(frontWallPlane, whitePhong, shinyness, reflection)
         
-        return [frontWall,leftWall, rightWall, bottomWall, topWall, backWall]
+        return ComplexSpaceObject(np.array([0, 0, 0]), [frontWall,leftWall, rightWall, bottomWall, topWall, backWall])
 
     def _init_cuboid(self):
-        frontRightCuboidPlane = Plane(np.array([0.6, 0.75, -1]), np.array([0, -1, 0]), np.array([0.25, 0, -0.25]))
-        frontLeftCuboidPlane = Plane(np.array([0.35, 0.75, -1.25]), np.array([0, -1, 0]), np.array([0.25, 0, 0.25]))
-        backLeftCuboidPlane = Plane(np.array([0.6, 0.75, -1.5]), np.array([0, -1, 0]), np.array([-0.25, 0, 0.25]))
-        backRightCuboidPlane = Plane(np.array([0.85, 0.75, -1.25]), np.array([0, -1, 0]), np.array([-0.25, 0, 0.25]))
+        frontRightCuboidPlane = Plane(np.array([0.6, -0.75, -1]), np.array([0, 1, 0]), np.array([0.25, 0, -0.25]))
+        frontLeftCuboidPlane = Plane(np.array([0.35, -0.75, -1.25]), np.array([0, 1, 0]), np.array([0.25, 0, 0.25]))
+        backLeftCuboidPlane = Plane(np.array([0.6, -0.75, -1.5]), np.array([0, 1, 0]), np.array([-0.25, 0, 0.25]))
+        backRightCuboidPlane = Plane(np.array([0.85, -0.75, -1.25]), np.array([0, 1, 0]), np.array([-0.25, 0, 0.25]))
         #bottomCuboidPlane = Plane(np.array([0.6, -0.75, -0.5]), np.array([0.25, 0, 0.25]), np.array([0.25, 0, -0.25]))
-        topCuboidPlane = Plane(np.array([0.6, -0.25, -1]), np.array([-0.25, 0, -0.25]), np.array([0.25, 0, -0.25]))
+        topCuboidPlane = Plane(np.array([0.6, 0.25, -1]), np.array([-0.25, 0, -0.25]), np.array([0.25, 0, -0.25]))
 
         ambientMult = 0.1
         diffuseMult = 0.2
@@ -71,15 +70,15 @@ class RayTracer:
         #bottomCuboid = Surface(bottomCuboidPlane, whitePhong, shinyness, reflection)
         topCuboid = SpaceObject(topCuboidPlane, whitePhong, shinyness, reflection)
 
-        return [frontRightCuboid, frontLeftCuboid, backLeftCuboid, backRightCuboid, topCuboid]
+        return ComplexSpaceObject(np.array([0, 0, 0]), [frontRightCuboid, frontLeftCuboid, backLeftCuboid, backRightCuboid, topCuboid])
 
     def _init_cube(self):
-        frontCubePlane = Plane(np.array([-0.75, 0.75, -1]), np.array([0, -0.5, 0]), np.array([0.5, 0, 0]))
-        leftCubePlane = Plane(np.array([-0.75, 0.75, -1]), np.array([0, -0.5, 0]), np.array([0, 0, -0.5]))
+        frontCubePlane = Plane(np.array([-0.75, -0.75, -1]), np.array([0, 0.5, 0]), np.array([0.5, 0, 0]))
+        leftCubePlane = Plane(np.array([-0.75, -0.75, -1]), np.array([0, 0.5, 0]), np.array([0, 0, -0.5]))
         #bottomCubePlane = Plane(np.array([-0.75, 0.75, -1.5]), np.array([0.5, 0, 0]), np.array([0, 0, -0.5]))
-        backCubePlane = Plane(np.array([-0.75, 0.75, -1.5]), np.array([0.5, 0, 0]), np.array([0, -0.5, 0]))
-        rightCubePlane = Plane(np.array([-0.25, 0.25, -1.5]), np.array([0, 0, 0.5]), np.array([0, 0.5, 0]))
-        topCubePlane = Plane(np.array([-0.2501, 0.25, -1.5]), np.array([0, 0, 0.5]), np.array([-0.5001, 0, 0]))
+        backCubePlane = Plane(np.array([-0.75, -0.75, -1.5]), np.array([0.5, 0, 0]), np.array([0, 0.5, 0]))
+        rightCubePlane = Plane(np.array([-0.25, -0.75, -1.5]), np.array([0, 0, 0.5]), np.array([0, 0.5, 0]))
+        topCubePlane = Plane(np.array([-0.2501, -0.25, -1.5]), np.array([0, 0, 0.5]), np.array([-0.5001, 0, 0]))
 
         ambientMult = 0.1
         diffuseMult = 0.2
@@ -97,27 +96,32 @@ class RayTracer:
         rightCube = SpaceObject(rightCubePlane, yellowPhong, shinyness, reflection)
         topCube = SpaceObject(topCubePlane, yellowPhong, shinyness, reflection)
 
-        return [frontCube, leftCube, backCube, rightCube, topCube]
+        return ComplexSpaceObject(np.array([-0.5, -0.5, -1.25]), [frontCube, leftCube, backCube, rightCube, topCube])
+        #return ComplexSpaceObject(np.array([0, 0, -0.1]), [frontCube, leftCube, backCube, rightCube, topCube])
 
-    def _initAllSpaceObjects(self):
-        allSpaceObjectsList = self._init_room()
-        allSpaceObjectsList.extend(self._init_cuboid())
-        allSpaceObjectsList.extend(self._init_cube())
-        allSpaceObjects = SpaceObjects(allSpaceObjectsList)
-        return allSpaceObjects
+    def _initspaceObjects(self):
+        room = self._init_room()
+        cuboid = self._init_cuboid()
+        cube = self._init_cube()
+        spaceObjects = SpaceObjects({
+            "room": room,
+            "cuboid": cuboid,
+            "cube": cube
+        })
+        return spaceObjects
 
     def _initLightSource(self):
-        supVec = np.array([0.1, -0.7499999, -1.6])
+        supVec = np.array([0.1, 0.7499999, -1.6])
         dirVec1 = np.array([-0.2, 0, 0])
         dirVec2 = np.array([0, 0, -0.2])
         plane = Plane(supVec, dirVec1, dirVec2)
         phongProp = PhongProperties(np.array([1.0, 1.0, 0.6]), 1, 1, 0.6)
-        lightSource = LightSource(self.allSpaceObjects, plane, phongProp)
+        lightSource = LightSource(self.spaceObjects, plane, phongProp)
         return lightSource
 
     def __init__(self, heightpx, widthpx, max_depth=3, randomShadowRays = 4, systematicShadowRayRoot = 2, processCount=None):
         self.camera = Camera(heightpx, widthpx)
-        self.allSpaceObjects = self._initAllSpaceObjects()
+        self.spaceObjects = self._initspaceObjects()
         self.lightSource = self._initLightSource()
         self._picturecap = np.zeros((heightpx, widthpx, 3))
         self._max_depth = max_depth
@@ -142,13 +146,13 @@ class RayTracer:
         color = np.zeros((3))
         reflection = 1
         for _ in range(self._max_depth):
-            collisionObj, minDistance = self.allSpaceObjects.checkIfCollisionRay(ray)
+            collisionObj, minDistance = self.spaceObjects.checkIfCollisionRay(ray)
             if collisionObj is None:
                 break
             #pos auf der surface
             surfPos = ray.origin + minDistance * ray.normDirection
             #normVek der surface
-            surfNorm = collisionObj.norm
+            surfNorm = collisionObj.geoObj.getPositiveNormVec(ray.origin)
             #shiftedPosVek des auftrittspunkt der surface
             surfShiftPos = surfPos + 1e-5 * surfNorm
             #define illumination var

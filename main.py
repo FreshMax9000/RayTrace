@@ -15,11 +15,18 @@ if __name__ == "__main__":
     width = int(lines * ratio)
     rayTracer = RayTracer(height, width, max_depth=1, randomShadowRays=0, systematicShadowRayRoot=0)
 
-    timeStart = time.time()
+    
+    frameCount = 30
+    for i in range (frameCount):
+        timeStart = time.time()
+        rayTracer.spaceObjects.complexDict["cube"].rotate(np.array([0.0, (np.pi / 2)*((1 / frameCount)), 0.0]))
+        #rayTracer.spaceObjects.complexDict["cube"].rotate(np.array([0.0, np.pi / 4, 0.0]))
+        
 
-    rayTracer.renderPicture()
+        rayTracer.renderPicture()
+            
+            
+        rayTracer.printImage(f"images/animation1/{i}")
+        print("---Finished---")
+        print("It took %.3fs"%(time.time() - timeStart))
         
-        
-    rayTracer.printImage("images/test")
-    print("---Finished---")
-    print("It took %.3fs"%(time.time() - timeStart))

@@ -41,7 +41,7 @@ class LightSource:
         return rayDistanceList
 
     def _getCollision(self, rayDistance: tuple):
-        return self._spaceObjs.getCollisionObject(rayDistance[0])
+        return self._spaceObjs.checkIfCollisionRay(rayDistance[0])
 
     def _getDistance(self, rayDistance: tuple):
         return rayDistance[1]
@@ -95,7 +95,7 @@ class LightSource:
         return self._phong.ambient
 
     def getClosestPointOfLight(self, ray: Ray):
-        lightN = self._plane.norm
+        lightN = self._plane.getPositiveNormVec(ray.origin)
         scalarLightNDir = np.dot(lightN, ray.normDirection)
         if scalarLightNDir == 0:
             ray.normDirection += 1e-5 # temporary hack, fix scalar product == 0 by adding small offset

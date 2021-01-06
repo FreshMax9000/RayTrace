@@ -5,10 +5,22 @@ from ray import Ray
 
 class GeometricObject:
 
+    def _rotMatrix(self, xRot, yRot, zRot):
+        xRotMatrix = np.array([[1, 0, 0], [0, np.cos(xRot), np.sin(xRot)], [0, -np.sin(xRot), np.cos(xRot)]])
+        yRotMatrix = np.array([[np.cos(yRot), 0, -np.sin(yRot)], [0, 1, 0], [np.sin(yRot), 0, np.cos(yRot)]])
+        zRotMatrix = np.array([[np.cos(zRot), np.sin(zRot), 0], [-np.sin(zRot), np.cos(zRot), 0], [0, 0 , 1]])
+        return (xRotMatrix.dot(yRotMatrix)).dot(zRotMatrix)
+
     def checkCollision(self, ray: Ray):
         pass
 
     def getNorm(self):
+        pass
+
+    def move(self, vector: np.ndarray):
+        pass
+
+    def rotate(self, origin: np.ndarray, direction: np.ndarray):
         pass
 
 
@@ -69,3 +81,16 @@ class Plane(GeometricObject):
 
     def getNorm(self):
         return self.norm
+
+    def move(self, vector: np.ndarray):
+        self.supVec += vector
+
+    def rotate(self, origin: np.ndarray, direction: np.ndarray):
+        tempSupVec = self.supVec - origin
+        tempDirVec1 = self.dirVec1 - origin + self.supVec
+        tempDirVec2 = self.dirVec2 - origin + self.supVec
+        rotMatrix = self._rotMatrix(direction[0], direction[1], direction[2])
+        self.supVec = rotMatrix.dot(tempSupVec) + origin
+        self.dirVec1 = rotMatrix.dot(tempDirVec1) + origin - self.supVec
+        self.dirVec2 = rotMatrix.dot(tempDirVec2) + origin - self.supVec
+
